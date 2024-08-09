@@ -89,6 +89,22 @@ onMounted(() => {
   transition: color 0.2s;
 }
 
+@media screen and (max-width: 700px) {
+  .cover-title {
+    font-size: 45px; /* 调整标题字体大小 */
+  }
+
+  .cover-content {
+    font-size: 18px; /* 调整内容字体大小 */
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .cover-title {
+    font-size: 35px;
+  }
+}
+
 @-webkit-keyframes bounce {
   0%,
   10%,
