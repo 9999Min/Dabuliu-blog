@@ -29,28 +29,22 @@
   </kila-kila-card>
 </template>
 
-<script>
+<script setup>
 import { getHotArticleList } from "../api/article";
-import { reactive } from "@vue/reactivity";
+import { reactive } from "vue";
 import { defaultThumbnail, useDefaultThumbnail } from "../utils/thumbnail";
 
-export default {
-  name: "KilaKilaHotArticleCard",
-  setup() {
-    let hotArticles = reactive([]);
-
-    getHotArticleList().then((data) => {
-      data.forEach((article) => {
-        article.createTime = article.createTime.split(" ")[0];
-        article.thumbnail = article.thumbnail || defaultThumbnail;
-      });
-
-      hotArticles.push(...data);
-    });
-
-    return { hotArticles, useDefaultThumbnail };
-  },
-};
+const hotArticles = reactive([]);
+/**
+ * 处理文章创建事件和缩略图
+ */
+getHotArticleList().then((data) => {
+  data.forEach((article) => {
+    article.createTime = article.createTime.split(" ")[0];
+    article.thumbnail = article.thumbnail || defaultThumbnail;
+  });
+  hotArticles.push(...data);
+});
 </script>
 
 <style scoped>
@@ -70,6 +64,7 @@ export default {
 .hot-article-thumbnail {
   width: 100%;
   height: 100%;
+  /* 放大铺满 */
   object-fit: cover;
   transition: all 0.4s ease;
 }
@@ -81,6 +76,7 @@ export default {
 .hot-article-info {
   flex: 1;
   padding-left: 10px;
+  /* 不截断单词另起一行 */
   word-break: break-all;
   display: inline-block;
   align-self: center;

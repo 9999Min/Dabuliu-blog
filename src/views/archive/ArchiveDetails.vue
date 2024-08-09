@@ -1,7 +1,7 @@
 <template>
   <div id="archive-details">
     <!-- 页头 -->
-    <kila-kila-header />
+    <blog-header />
 
     <!-- 二次元封面 -->
     <kila-kila-wife-cover>

@@ -9,9 +9,9 @@
       <!-- 侧边栏 -->
       <div class="side-content">
         <blog-admin-card />
-        <kila-kila-hot-article-card />
-        <kila-kila-category-card />
-        <kila-kila-tag-card />
+        <blog-hot-article-card />
+        <blog-category-card />
+        <blog-tag-card />
         <kila-kila-archive-card />
       </div>
 
@@ -29,7 +29,7 @@
           background
           layout="prev, pager, next"
           :total="articleCount"
-          :page-size="pageSize"
+          :page-size="EnumModule.ARTICLE_PAGESIZE"
           id="pagination"
           @current-change="onCurrentPageChanged"
           v-if="articleCount > 0"

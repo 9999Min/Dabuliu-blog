@@ -1,7 +1,10 @@
 <template>
   <div class="admin-menu">
-    <kila-kila-admin-card />
+    <!-- 个人信息面板 -->
+    <blog-admin-card />
+    <!-- 自定义分割线 -->
     <kila-kila-divider />
+    <!-- 菜单栏 -->
     <el-menu>
       <!-- 首页 -->
       <el-menu-item index="1" @click="$router.push('/')">
@@ -69,12 +72,6 @@
     </el-menu>
   </div>
 </template>
-
-<script>
-export default {
-  name: "KilaKilaAdminMenu",
-};
-</script>
 
 <style lang="less" scoped>
 .admin-menu {

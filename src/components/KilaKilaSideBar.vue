@@ -3,9 +3,9 @@
   <div id="side-bar">
     <slot>
       <kila-kila-admin-card />
-      <kila-kila-hot-article-card />
-      <kila-kila-category-card />
-      <kila-kila-tag-card />
+      <blog-hot-article-card />
+      <blog-category-card />
+      <blog-tag-card />
       <kila-kila-archive-card />
     </slot>
   </div>

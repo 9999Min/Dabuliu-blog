@@ -1,7 +1,7 @@
 <template>
   <div id="article-details">
     <!-- 页头 -->
-    <kila-kila-header />
+    <blog-header />
 
     <!-- 二次元封面 -->
     <kila-kila-wife-cover>
@@ -38,10 +38,10 @@
     <div class="container">
       <!-- 侧边栏 -->
       <kila-kila-side-bar>
-        <kila-kila-admin-card />
+        <blog-admin-card />
         <div class="sticky-layout">
           <kila-kila-catalog-card v-if="articleLoaded" />
-          <kila-kila-hot-article-card />
+          <blog-hot-article-card />
         </div>
       </kila-kila-side-bar>
 
@@ -229,7 +229,7 @@ import {
   updateViewCount,
 } from "../../api/article";
 import { reactive, nextTick, ref } from "vue";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import markdownIt from "../../utils/markdown-it";
 import { mapState } from "../../store/map";
 import { useDefaultThumbnail, defaultThumbnail } from "../../utils/thumbnail";
@@ -242,8 +242,7 @@ import {
   deleteComment,
   updateComment,
 } from "../../api/comment";
-import { getUserInfo } from "../../utils/storage";
-
+import { uploadImage } from "../../api/image";
 export default {
   name: "ArticleDetails",
   setup(props) {
@@ -358,11 +357,12 @@ export default {
         ElMessage.warning("评论内容不能为空哦~");
         return;
       }
+      let promise;
 
       if (!isInEditMode.value) {
-        var promise = addComment(props.id, commentContent.value);
+        promise = addComment(props.id, commentContent.value);
       } else {
-        var promise = updateComment(editedComment.id, commentContent.value);
+        promise = updateComment(editedComment.id, commentContent.value);
       }
 
       promise.then(() => {

@@ -1,7 +1,7 @@
 <template>
   <div id="arctile-edit">
     <!-- 页头 -->
-    <kila-kila-header />
+    <blog-header />
 
     <!-- 二次元封面 -->
     <kila-kila-wife-cover>
@@ -215,7 +215,7 @@ export default {
       document.getElementById("draft-button").disabled = true;
     }
 
-    function handleRemoveThumbnail(file) {
+    function handleRemoveThumbnail() {
       ruleForm.thumbnail = "";
     }
 
