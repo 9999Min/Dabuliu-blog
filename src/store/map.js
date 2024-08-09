@@ -24,7 +24,7 @@ const mapGetters = (namespace) => {
   return Object.fromEntries(
     Object.keys(store.getters).map((g) => [
       g,
-      computed(() => store.getters[namespace ? f`${namespace}/${g}` : g]),
+      computed(() => store.getters[namespace ? `${namespace}/${g}` : g]),
     ])
   );
 };
@@ -39,7 +39,7 @@ const mapMutations = (namespace) => {
   return Object.fromEntries(
     Object.keys(store._mutations).map((m) => [
       m,
-      (value) => store.commit(namespace ? f`${namespace}/${m}` : m, value),
+      (value) => store.commit(namespace ? `${namespace}/${m}` : m, value),
     ])
   );
 };
@@ -49,12 +49,12 @@ const mapMutations = (namespace) => {
  * @param {string} namespace 命名空间
  * @returns actionObj
  */
-const mapActions = () => {
+const mapActions = (namespace) => {
   const store = useStore();
   return Object.fromEntries(
     Object.keys(store._actions).map((a) => [
       a,
-      (value) => store.dispatch(namespace ? f`${namespace}/${a}` : a, value),
+      (value) => store.dispatch(namespace ? `${namespace}/${a}` : a, value),
     ])
   );
 };

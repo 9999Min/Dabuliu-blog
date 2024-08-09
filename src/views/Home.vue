@@ -8,14 +8,14 @@
     <div class="container">
       <!-- 侧边栏 -->
       <div class="side-content">
-        <kila-kila-admin-card />
+        <blog-admin-card />
         <kila-kila-hot-article-card />
         <kila-kila-category-card />
         <kila-kila-tag-card />
         <kila-kila-archive-card />
       </div>
 
-      <!-- 发表的文章 -->
+      <!-- 文章列表 -->
       <div class="post-article-list">
         <kila-kila-post-article-card
           v-for="(article, index) in postArticles"
@@ -45,36 +45,30 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { reactive, ref } from "vue";
 import { getPostArticleList } from "../api/article";
 import { defaultThumbnail } from "../utils/thumbnail";
+import EnumModule from "../constant";
+const postArticles = reactive([]);
+const articleCount = ref(0);
 
-export default {
-  name: "Home",
-  setup() {
-    let pageSize = 10;
-    let postArticles = reactive([]);
-    let articleCount = ref(0);
-
-    onCurrentPageChanged(1);
-
-    function onCurrentPageChanged(pageNum) {
-      getPostArticleList(pageNum, pageSize).then((data) => {
-        articleCount.value = parseInt(data.total);
-        data.rows.forEach((article) => {
-          article.createTime = article.createTime.split(" ")[0];
-          article.thumbnail = article.thumbnail || defaultThumbnail;
-        });
-
-        // 重置列表内容
-        postArticles.splice(0, postArticles.length, ...data.rows);
-      });
-    }
-
-    return { postArticles, articleCount, pageSize, onCurrentPageChanged };
-  },
-};
+/**
+ * @param pageNum
+ * 获取文章方法 对文章的创建时间和展示图片处理
+ * 文章列表 文章总数
+ * 开始即调用页码为1
+ */
+onCurrentPageChanged(1);
+async function onCurrentPageChanged(pageNum) {
+  const data = await getPostArticleList(pageNum, EnumModule.ARTICLE_PAGESIZE);
+  articleCount.value = parseInt(data.total);
+  data.rows.forEach((article) => {
+    article.createTime = article.createTime.split(" ")[0];
+    article.thumbnail = article.thumbnail || defaultThumbnail;
+  });
+  postArticles.splice(0, postArticles.length, ...data.rows);
+}
 </script>
 
 <style lang="less" scoped>
@@ -107,7 +101,7 @@ export default {
   width: 26%;
   margin-right: 20px;
 }
-
+// 样式穿透
 :deep(#pagination) {
   margin-top: 20px;
   justify-content: center;

@@ -63,24 +63,15 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { mapState } from "../store/map";
-import { computed } from "vue";
+// mapState返回的数据是computed计算属性，所以在script中需要使用.value读值
+const { adminInfo, articleCountInfo } = mapState("adminAbout");
 
-export default {
-  name: "KilaKilaAdminCard",
-  setup() {
-    let { adminInfo, articleCountInfo } = mapState("adminAbout");
-
-    function gotoGithub() {
-      location.href = adminInfo.value.githubUrl;
-    }
-
-    return { adminInfo, articleCountInfo, gotoGithub, computed };
-  },
-};
+function gotoGithub() {
+  location.href = adminInfo.value.githubUrl;
+}
 </script>
-<script setup></script>
 
 <style scoped>
 @import url(../assets/css/material-icons.css);
