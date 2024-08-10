@@ -162,9 +162,8 @@
         >
       </div>
     </div>
-
     <!-- 页脚 -->
-    <kila-kila-footer />
+    <blog-footer />
   </div>
 </template>
 

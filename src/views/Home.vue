@@ -38,7 +38,7 @@
     </div>
 
     <!-- 页脚 -->
-    <kila-kila-footer :adminName="$store.state.adminAbout.adminInfo.nickName" />
+    <blog-footer :adminName="$store.state.adminAbout.adminInfo.nickName" />
 
     <!-- 滚动到顶部按钮 -->
     <kila-kila-back-to-top />

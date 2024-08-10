@@ -17,7 +17,7 @@
     </div>
 
     <!-- 页脚 -->
-    <kila-kila-footer />
+    <blog-footer />
 
     <!-- 回到顶部 -->
     <kila-kila-back-to-top />

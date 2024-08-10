@@ -218,7 +218,7 @@
     <kila-kila-light-box ref="lightBoxRef" v-if="articleLoaded" />
 
     <!-- 页脚 -->
-    <kila-kila-footer />
+    <blog-footer />
   </div>
 </template>
 
