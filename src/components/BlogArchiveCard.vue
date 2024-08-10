@@ -31,28 +31,21 @@
     </div>
   </div>
 </template>
-
-<script>
-import { reactive } from "@vue/reactivity";
+<script setup>
+import { reactive } from "vue";
 import { getArchiveCountList } from "../api/archive";
-
-export default {
-  name: "KilaKilaArchiveCard",
-  setup() {
-    let archiveCounts = reactive([]);
-
-    getArchiveCountList(1, 100).then((data) => {
-      archiveCounts.push(...data.rows);
-    });
-
-    return { archiveCounts };
-  },
-};
+const archiveCounts = reactive([]);
+/**
+ * 获取归档记录列表
+ */
+getArchiveCountList(1, 100).then((data) => {
+  archiveCounts.push(...data.rows);
+});
 </script>
 
 <style scoped>
 .card {
-  background: white;
+  background-color: white;
   border-radius: 8px;
   box-shadow: var(--card-box-shadow);
   padding: 20px 24px;
@@ -83,6 +76,25 @@ export default {
   animation: moveLinkAni 1s infinite;
 }
 
+@keyframes moveLinkAni {
+  0%,
+  100% {
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -o-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  50% {
+    -webkit-transform: translateX(3px);
+    -moz-transform: translateX(3px);
+    -o-transform: translateX(3px);
+    -ms-transform: translateX(3px);
+    transform: translateX(3px);
+  }
+}
+
 .header-more-icon {
   font-size: 18px;
   color: var(--text-color);
@@ -110,28 +122,9 @@ export default {
   padding: 10px 17px;
 }
 
-.archive-date {
+.archive-data {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-@keyframes moveLinkAni {
-  0%,
-  100% {
-    -webkit-transform: translateX(0);
-    -moz-transform: translateX(0);
-    -o-transform: translateX(0);
-    -ms-transform: translateX(0);
-    transform: translateX(0);
-  }
-
-  50% {
-    -webkit-transform: translateX(3px);
-    -moz-transform: translateX(3px);
-    -o-transform: translateX(3px);
-    -ms-transform: translateX(3px);
-    transform: translateX(3px);
-  }
 }
 </style>

@@ -6,7 +6,7 @@
       <blog-hot-article-card />
       <blog-category-card />
       <blog-tag-card />
-      <kila-kila-archive-card />
+      <blog-archive-card />
     </slot>
   </div>
 </template>

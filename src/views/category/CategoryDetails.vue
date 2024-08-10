@@ -16,7 +16,7 @@
 
       <!-- 发表的文章 -->
       <div class="post-article-list">
-        <kila-kila-post-article-card
+        <blog-post-article-card
           v-for="(article, index) in postArticles"
           :key="article.id"
           :article="article"

@@ -1,7 +1,7 @@
 <template>
   <div :class="cardClass">
     <!-- 缩略图 -->
-    <router-link :to="`/article/${article.id}`" :class="thumbailLinkClass"
+    <router-link :to="`/article/${article.id}`" :class="thumbnailLinkClass"
       ><img
         :src="article.thumbnail"
         @error.once="useDefaultThumbnail"
@@ -43,34 +43,26 @@
   </div>
 </template>
 
-<script>
-import { reactive } from "vue";
+<script setup>
 import { useDefaultThumbnail } from "../utils/thumbnail";
+import { reactive, defineProps } from "vue";
 
-export default {
-  name: "KilaKilaPostArticleCard",
-  props: {
-    article: {
-      type: Object,
-      require: true,
-    },
-    reverse: {
-      type: Boolean,
-      require: false,
-    },
+const props = defineProps({
+  article: {
+    type: Object,
+    require: true,
   },
-  setup(props) {
-    let cardClass = reactive(["post-article-card"]);
-    let thumbailLinkClass = reactive(["post-article-thumbail-link"]);
-
-    if (props.reverse) {
-      cardClass.push("post-article-card-reversed");
-      thumbailLinkClass.push("post-article-thumbail-link-reversed");
-    }
-
-    return { cardClass, thumbailLinkClass, useDefaultThumbnail };
+  reverse: {
+    type: Boolean,
+    require: false,
   },
-};
+});
+const cardClass = reactive(["post-article-card"]);
+const thumbnailLinkClass = reactive(["post-article-thumbnail-link"]);
+if (props.reverse) {
+  cardClass.push("post-article-card-reversed");
+  thumbnailLinkClass.push("post-article-thumbnail-link-reversed");
+}
 </script>
 
 <style scoped>
@@ -89,7 +81,7 @@ export default {
   flex-direction: row-reverse;
 }
 
-.post-article-thumbail-link {
+.post-article-thumbnail-link {
   width: 44%;
   height: 100%;
   overflow: hidden;
@@ -97,7 +89,7 @@ export default {
   border-radius: 8px 0 0 8px;
 }
 
-.post-article-thumbail-link-reversed {
+.post-article-thumbnail-link-reversed {
   border-radius: 0 8px 8px 0;
 }
 
