@@ -212,7 +212,7 @@
     </div>
 
     <!-- 回到顶部 -->
-    <kila-kila-back-to-top />
+    <blog-back-to-top />
 
     <!-- 图片查看器 -->
     <kila-kila-light-box ref="lightBoxRef" v-if="articleLoaded" />

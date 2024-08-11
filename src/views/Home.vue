@@ -41,7 +41,7 @@
     <blog-footer :adminName="$store.state.adminAbout.adminInfo.nickName" />
 
     <!-- 滚动到顶部按钮 -->
-    <kila-kila-back-to-top />
+    <blog-back-to-top />
   </div>
 </template>
 

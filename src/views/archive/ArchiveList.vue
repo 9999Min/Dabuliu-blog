@@ -90,7 +90,7 @@
     <blog-footer />
 
     <!-- 回到顶部 -->
-    <kila-kila-back-to-top />
+    <blog-back-to-top />
   </div>
 </template>
 
