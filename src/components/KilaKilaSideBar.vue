@@ -2,7 +2,7 @@
   <!-- 侧边栏 -->
   <div id="side-bar">
     <slot>
-      <kila-kila-admin-card />
+      <blog-admin-card />
       <blog-hot-article-card />
       <blog-category-card />
       <blog-tag-card />

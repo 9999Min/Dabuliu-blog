@@ -2,7 +2,7 @@
   <el-card class="box-card">
     <template #header>
       <div class="card-header">
-        <h2>✨ Kila Kila Blog ✨</h2>
+        <h2>{{ EnumModule.BLOG_TITLE }}</h2>
       </div>
     </template>
 
@@ -14,16 +14,8 @@
   </el-card>
 </template>
 
-<script>
-export default {
-  name: "KilaKilaFormCard",
-  props: {
-    title: {
-      type: String,
-      require: true,
-    },
-  },
-};
+<script setup>
+import EnumModule from "../constant/index";
 </script>
 
 <style scoped>

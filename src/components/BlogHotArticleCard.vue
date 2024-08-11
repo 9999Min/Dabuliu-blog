@@ -1,5 +1,5 @@
 <template>
-  <kila-kila-card :icon="['fas', 'fire']" iconColor="#f01111" title="热门文章">
+  <blog-card :icon="['fas', 'fire']" iconColor="#f01111" title="热门文章">
     <div
       v-for="article in hotArticles"
       :key="article.id"
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-  </kila-kila-card>
+  </blog-card>
 </template>
 
 <script setup>
