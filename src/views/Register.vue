@@ -93,9 +93,7 @@
 
         <!-- 注册按钮 -->
         <el-form-item>
-          <kila-kila-button @click="submitForm(ruleFormRef)"
-            >注册</kila-kila-button
-          >
+          <blog-button @click="submitForm(ruleFormRef)">注册</blog-button>
         </el-form-item>
       </el-form>
     </kila-kila-form-card>

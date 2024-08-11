@@ -42,8 +42,7 @@
             <path
               fill="white"
               d="M406.656 706.944L195.84 496.256a32 32 0 10-45.248 45.248l256 256 512-512a32 32 0 00-45.248-45.248L406.592 706.944z"
-            ></path></svg
-        ></i>
+            ></path></svg ></i>
       </label>
 
       <!-- 图标 -->
@@ -102,14 +101,13 @@
 <script>
 import { ref, computed } from "vue";
 import { uploadImage } from "../api/image";
-import { Plus } from "@element-plus/icons-vue";
 import VueEasyLightbox from "vue-easy-lightbox";
 import { ElMessage } from "element-plus/lib/components";
 
 export default {
   name: "KilaKilaUploader",
   emits: ["uploaded", "aboutToUpload", "removed"],
-  components: { Plus, VueEasyLightbox },
+  components: { VueEasyLightbox },
   setup(props, context) {
     let progress = ref(0);
     let isLightBoxVisible = ref(false);

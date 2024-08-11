@@ -76,7 +76,7 @@
 
 <script>
 import { reactive, computed, ref } from "vue";
-import { fallbackAvatar } from "../utils/avatar";
+// import { fallbackAvatar } from "../utils/avatar";
 import markdownIt from "../utils/markdown-it";
 import { getUserInfo } from "../utils/storage";
 

@@ -48,9 +48,7 @@
 
         <!-- 登录按钮 -->
         <el-form-item>
-          <kila-kila-button @click="submitForm(ruleFormRef)"
-            >登录</kila-kila-button
-          >
+          <blog-button @click="submitForm(ruleFormRef)">登录</blog-button>
         </el-form-item>
       </el-form>
       <p id="signup-hint">

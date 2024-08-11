@@ -24,8 +24,8 @@
 
     <!-- 在 github 上 follow -->
     <el-button type="primary" class="follow-button" @click="gotoGithub"
-      ><font-awesome-icon :icon="['fab', 'github']" class="github-icon" />Follow
-      Me</el-button
+      ><font-awesome-icon :icon="['fab', 'github']" class="github-icon" />
+      关注我</el-button
     >
 
     <!-- 社交软件图标 -->
