@@ -3,7 +3,7 @@
     <!-- 个人信息面板 -->
     <blog-admin-card />
     <!-- 自定义分割线 -->
-    <kila-kila-divider />
+    <blog-divider />
     <!-- 菜单栏 -->
     <el-menu>
       <!-- 首页 -->
@@ -25,7 +25,7 @@
           <span>分类</span>
         </template>
         <el-menu-item
-          v-for="category in $store.state.categoryAbout.categoryCounts"
+          v-for="category in categoryCounts"
           :key="category.id"
           :index="'3-' + category.id"
           class="link-item"
@@ -43,7 +43,7 @@
           <span>标签</span>
         </template>
         <el-menu-item
-          v-for="tag in $store.state.tagAbout.tagCounts"
+          v-for="tag in tagCounts"
           :key="tag.id"
           :index="'4-' + tag.id"
           class="link-item"
@@ -57,7 +57,7 @@
       <!-- 新随笔 -->
       <el-menu-item
         index="5"
-        v-if="$store.state.adminAbout.isAdmin"
+        v-if="isAdmin"
         @click="$router.push('/article/add')"
       >
         <font-awesome-icon :icon="['fas', 'pen']" class="menu-icon" />
@@ -72,6 +72,13 @@
     </el-menu>
   </div>
 </template>
+
+<script setup>
+import { mapState } from "../store/map";
+const { isAdmin } = mapState("adminAbout");
+const { categoryCounts } = mapState("categoryAbout");
+const { tagCounts } = mapState("tagAbout");
+</script>
 
 <style lang="less" scoped>
 .admin-menu {

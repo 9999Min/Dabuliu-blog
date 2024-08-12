@@ -2,24 +2,17 @@
   <hr />
 </template>
 
-<script>
-export default {
-  name: "KilaKilaDivider",
-};
-</script>
-
-<style scoped>
+<style lang="less" scoped>
 hr {
   position: relative;
-  margin: 10px 0;
+  margin: 10px auto;
   border: 2px dashed #bfe4fb;
-  width: 100%;
+  width: 80%;
   box-sizing: content-box;
   height: 0;
   overflow: visible;
-  box-sizing: border-box;
+  box-sizing: border;
 }
-
 hr::before {
   position: absolute;
   top: -11px;
@@ -29,10 +22,6 @@ hr::before {
   content: "✂";
   font-size: 21px;
   line-height: 1;
-  -webkit-transition: all 1s ease-in-out;
-  -moz-transition: all 1s ease-in-out;
-  -o-transition: all 1s ease-in-out;
-  -ms-transition: all 1s ease-in-out;
   transition: all 1s ease-in-out;
 }
 

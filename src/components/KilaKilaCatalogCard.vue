@@ -75,7 +75,7 @@ export default {
           parent: null,
           children: [],
           rawName: element.innerText,
-          scrollTop: element.offsetTop,
+          scrollTop: element.offsetTop - 50,
         };
 
         if (titles.length > 0) {
@@ -128,7 +128,7 @@ export default {
 
       for (let i = titles.length - 1; i >= 0; i--) {
         const title = titles[i];
-        if (title.scrollTop <= window.scrollY) {
+        if (title.scrollTop <= window.scrollY + 50) {
           if (currentTitle.id === title.id) return;
 
           Object.assign(currentTitle, title);
@@ -166,7 +166,8 @@ export default {
 
     // 滚动到指定的位置
     function scrollToView(scrollTop) {
-      window.scrollTo({ top: scrollTop, behavior: "smooth" });
+      window.scrollTo({ top: scrollTop, behavior: "instant" });
+      console.log(scrollTop);
     }
 
     return { titles, currentTitle, progress, scrollToView };
