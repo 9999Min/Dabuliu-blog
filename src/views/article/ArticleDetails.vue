@@ -160,7 +160,7 @@
 
           <!-- 评论 -->
           <div id="comment-items">
-            <kila-kila-comment-item
+            <blog-comment-item
               v-for="(comment, index) in comments"
               :key="comment.id"
               :comment="comment"

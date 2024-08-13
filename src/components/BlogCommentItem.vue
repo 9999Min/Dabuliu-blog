@@ -1,40 +1,21 @@
 <template>
   <div :class="commentClass">
-    <!-- 头像 -->
+    <!-- 左侧头像 -->
     <div class="comment-item-avatar">
-      <img :src="comment.avatar" @error.once="fallbackAvatar" alt="用户头像" />
+      <img :src="props.comment.avatar" alt="用户头像" />
     </div>
-
-    <!-- 评论内容 -->
+    <!-- 右侧评论框 -->
     <div class="comment-item-body">
-      <!-- 评论头 -->
+      <!--  上方头部 -->
       <div class="comment-item-header">
-        <!-- 评论信息 -->
+        <!-- 左侧评论头信息 -->
         <div class="comment-item-info">
-          <a @click.prevent="scrollToAnchor">#{{ floorNumber }}楼 </a>
-          <span>{{ comment.createTime }}</span>
-          <span>{{ comment.userName }}</span>
+          <a @click.prevent="scrollToAnchor">#{{ props.floorNumber }}楼</a>
+          <span>{{ props.comment.createTime }}</span>
+          <span> {{ props.comment.userName }}</span>
         </div>
-
-        <!-- 评论操作 -->
+        <!-- 右侧评论操作菜单 -->
         <div class="comment-item-actions">
-          <!-- 表情 -->
-          <span class="smile-face">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="16"
-              viewBox="0 0 16 16"
-              version="1.1"
-              width="16"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM5 8a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zM5.32 9.636a.75.75 0 011.038.175l.007.009c.103.118.22.222.35.31.264.178.683.37 1.285.37.602 0 1.02-.192 1.285-.371.13-.088.247-.192.35-.31l.007-.008a.75.75 0 111.222.87l-.614-.431c.614.43.614.431.613.431v.001l-.001.002-.002.003-.005.007-.014.019a1.984 1.984 0 01-.184.213c-.16.166-.338.316-.53.445-.63.418-1.37.638-2.127.629-.946 0-1.652-.308-2.126-.63a3.32 3.32 0 01-.715-.657l-.014-.02-.005-.006-.002-.003v-.002h-.001l.613-.432-.614.43a.75.75 0 01.183-1.044h.001z"
-              ></path>
-            </svg>
-          </span>
-
-          <!-- 更多操作 -->
           <span class="more-actions" @click="showMoreActionsMenu">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -53,9 +34,9 @@
           <el-dropdown
             ref="moreActionsMenu"
             trigger="contextmenu"
-            @command="handleMenuCommand"
+            @comman="handleMenuCommand"
           >
-            <template #dropdown>
+            <template v-slot:dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item command="reply">回复</el-dropdown-item>
                 <el-dropdown-item command="update" v-if="canModify"
@@ -74,67 +55,69 @@
   </div>
 </template>
 
-<script>
-import { reactive, computed, ref } from "vue";
-// import { fallbackAvatar } from "../utils/avatar";
+<script setup>
+import { reactive, ref, computed, defineEmits, defineProps } from "vue";
 import markdownIt from "../utils/markdown-it";
 import { getUserInfo } from "../utils/storage";
-
-export default {
-  name: "KilaKilaCommentItem",
-  props: {
-    comment: {
-      type: Object,
-      require: true,
-    },
-    floorNumber: {
-      type: Number,
-      require: true,
-    },
+// 定义props
+const props = defineProps({
+  comment: {
+    type: String,
+    require: true,
   },
-  emits: ["reply", "update", "delete"],
-  setup(props, context) {
-    let commentClass = reactive(["comment-item"]);
-    if (props.comment.isAdmin) {
-      commentClass.push("comment-item-admin");
-    }
-
-    let content = computed(() => markdownIt.render(props.comment.content));
-    let moreActionsMenu = ref();
-    let userInfo = getUserInfo();
-    let canModify = userInfo
-      ? ref(userInfo.isAdmin || props.comment.createBy == userInfo.id)
-      : ref(false);
-
-    function scrollToAnchor(event) {
-      event.target.scrollIntoView({ behavior: "smooth" });
-    }
-
-    function showMoreActionsMenu() {
-      moreActionsMenu.value.handleOpen();
-    }
-
-    function handleMenuCommand(command) {
-      context.emit(command, props.comment);
-    }
-
-    return {
-      commentClass,
-      content,
-      moreActionsMenu,
-      canModify,
-      scrollToAnchor,
-      showMoreActionsMenu,
-      handleMenuCommand,
-    };
+  floorNumber: {
+    type: Number,
+    require: true,
   },
-};
+});
+//定义emits
+const emits = defineEmits(["reply", "update", "delete"]);
+
+//定义数据
+const commentClass = reactive(["comment-item"]);
+/**
+ * 判断是否是当前用户的评论，添加样式
+ */
+if (props.comment.isAdmin) {
+  commentClass.push("comment-item-admin");
+}
+// 将当前内容转换成markdown内容
+const content = computed(() => {
+  return markdownIt.render(props.comment.content);
+});
+//获取下拉框组件
+const moreActionsMenu = ref();
+// 获取用户内容
+const userInfo = getUserInfo();
+
+//判断当前用户是否可以修改评论，管理员和评论者才能修改
+const canModify = userInfo
+  ? ref(userInfo.isAdmin || props.comment.createBy == userInfo.id)
+  : ref(false);
+/**
+ * 滚动到点击评论
+ */
+function scrollToAnchor(e) {
+  e.target.scrollIntoView({ behavior: "smooth" });
+}
+/**
+ * 显示下拉框
+ */
+function showMoreActionsMenu() {
+  moreActionsMenu.value.handleOpen();
+}
+/**
+ * 下拉框的点击事件，触发emits提交给父组件
+ */
+function handleMenuCommand(command) {
+  emits(command, props.comment);
+}
 </script>
 
 <style lang="less" scoped>
 .comment-item {
   display: flex;
-  padding: 15px 0 15px 0;
+  padding: 15px 0;
   position: relative;
 
   .comment-item-avatar {
@@ -142,7 +125,7 @@ export default {
       height: 40px;
       width: 40px;
       transition: all 0.6s ease-out;
-      box-shadow: 0 0 0 1px rgba(27, 31, 36, 0.15);
+      box-shadow: 0 0 0 1px rgba(27, 31, 36, 0.5);
       border-radius: 50%;
 
       &:hover {
@@ -224,6 +207,11 @@ export default {
             fill: currentColor;
           }
         }
+        /* 弹出菜单 */
+        :deep(.el-dropdown) {
+          left: -13px;
+          top: 10px;
+        }
       }
 
       /*气泡三角形*/
@@ -249,12 +237,6 @@ export default {
         margin-left: 2px;
         border-width: 7px;
         border-right-color: #f6f8fa;
-      }
-
-      /* 弹出菜单 */
-      :deep(.el-dropdown) {
-        left: -13px;
-        top: 10px;
       }
     }
 
