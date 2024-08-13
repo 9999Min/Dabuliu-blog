@@ -1,6 +1,6 @@
 <template>
   <div class="register">
-    <kila-kila-form-card title="你来啦">
+    <blog-form-card title="你来啦">
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -96,7 +96,7 @@
           <blog-button @click="submitForm(ruleFormRef)">注册</blog-button>
         </el-form-item>
       </el-form>
-    </kila-kila-form-card>
+    </blog-form-card>
   </div>
 </template>
 

@@ -1,18 +1,16 @@
 <template>
   <div class="login">
-    <kila-kila-form-card title="欢迎前辈回家">
+    <blog-form-card title="欢迎前辈回家">
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
         :rules="rules"
         label-width="0px"
-        class="login-ruleForm"
       >
         <!-- 用户名 -->
         <el-form-item prop="userName">
           <el-input
             v-model="ruleForm.userName"
-            class="w-50 m-3"
             size="large"
             placeholder="用户名"
           >
@@ -28,7 +26,6 @@
         <el-form-item prop="password">
           <el-input
             v-model="ruleForm.password"
-            class="w-50 m-2"
             size="large"
             type="password"
             placeholder="密码"
@@ -55,7 +52,7 @@
         前辈还没有账号？
         <router-link to="/register">快来注册一个吧！</router-link>
       </p>
-    </kila-kila-form-card>
+    </blog-form-card>
   </div>
 </template>
 
