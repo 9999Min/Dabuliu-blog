@@ -10,7 +10,7 @@
 
     <div class="container">
       <!-- 侧边栏 -->
-      <kila-kila-side-bar />
+      <blog-side-bar />
 
       <!-- 归档 -->
       <div class="archive-body">

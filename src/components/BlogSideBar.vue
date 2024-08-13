@@ -1,5 +1,4 @@
 <template>
-  <!-- 侧边栏 -->
   <div id="side-bar">
     <slot>
       <blog-admin-card />
@@ -10,13 +9,6 @@
     </slot>
   </div>
 </template>
-
-<script>
-export default {
-  name: "KilaKilaSideBar",
-};
-</script>
-
 <style lang="less" scoped>
 #side-bar {
   width: 26%;

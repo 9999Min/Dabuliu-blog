@@ -37,13 +37,13 @@
 
     <div class="container">
       <!-- 侧边栏 -->
-      <kila-kila-side-bar>
+      <blog-side-bar>
         <blog-admin-card />
         <div class="sticky-layout">
           <kila-kila-catalog-card v-if="articleLoaded" />
           <blog-hot-article-card />
         </div>
-      </kila-kila-side-bar>
+      </blog-side-bar>
 
       <!-- 文章内容 -->
       <div class="post-body">

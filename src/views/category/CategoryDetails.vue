@@ -12,7 +12,7 @@
 
     <div class="container">
       <!-- 侧边栏 -->
-      <kila-kila-side-bar />
+      <blog-side-bar />
 
       <!-- 发表的文章 -->
       <div class="post-article-list">

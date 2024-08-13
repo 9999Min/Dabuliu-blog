@@ -10,7 +10,7 @@
 
     <div class="container">
       <!-- 侧边栏 -->
-      <kila-kila-side-bar />
+      <blog-side-bar />
 
       <!-- 标签云卡片 -->
       <kila-kila-word-cloud-card :words="categoryCounts" baseUrl="/category" />
