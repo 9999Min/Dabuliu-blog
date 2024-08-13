@@ -62,7 +62,7 @@ import { getUserInfo } from "../utils/storage";
 // 定义props
 const props = defineProps({
   comment: {
-    type: String,
+    type: Object,
     require: true,
   },
   floorNumber: {

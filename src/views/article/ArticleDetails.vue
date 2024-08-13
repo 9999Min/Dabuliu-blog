@@ -215,7 +215,7 @@
     <blog-back-to-top />
 
     <!-- 图片查看器 -->
-    <kila-kila-light-box ref="lightBoxRef" v-if="articleLoaded" />
+    <blog-light-box ref="lightBoxRef" v-if="articleLoaded" />
 
     <!-- 页脚 -->
     <blog-footer />
@@ -254,7 +254,6 @@ export default {
     let previousArticle = reactive({});
     let nextArticle = reactive({});
     let lightBoxRef = ref();
-
     // 获取文章内容
     let articleDetails = reactive({ createTime: "" });
     getArticleDetails(props.id).then((data) => {
