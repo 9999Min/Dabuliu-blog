@@ -4,9 +4,9 @@
     <blog-header />
 
     <!-- 二次元封面 -->
-    <kila-kila-wife-cover>
+    <blog-page-cover>
       <h1>分类</h1>
-    </kila-kila-wife-cover>
+    </blog-page-cover>
 
     <div class="container">
       <!-- 侧边栏 -->
@@ -52,23 +52,17 @@ export default {
   animation: fadeInUp 1s;
 }
 
-.wife-cover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  h1 {
-    width: 100%;
-    text-align: center;
-    position: absolute;
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-    font-size: 40px;
-    color: white;
-    line-height: 1.5;
-    margin-bottom: 15px;
-    padding: 0 30px;
-    box-sizing: border-box;
-  }
+h1 {
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  font-size: 40px;
+  color: white;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  padding: 0 30px;
+  box-sizing: border-box;
 }
 
 .cloud-card {

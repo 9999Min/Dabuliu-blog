@@ -4,11 +4,11 @@
     <blog-header />
 
     <!-- 二次元封面 -->
-    <kila-kila-wife-cover>
+    <blog-page-cover>
       <div class="tag-info">
         <h1 class="tag-name">{{ tagName }}</h1>
       </div>
-    </kila-kila-wife-cover>
+    </blog-page-cover>
 
     <div class="container">
       <!-- 侧边栏 -->
@@ -105,29 +105,23 @@ export default {
   animation: fadeInUp 1s;
 }
 
-.wife-cover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.tag-info {
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 
-  .tag-info {
-    text-align: center;
-    position: absolute;
-    width: 100%;
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-
-    .tag-name {
-      font-size: 40px;
-      color: white;
-      line-height: 1.5;
-      margin-bottom: 15px;
-      padding: 0 30px;
-      overflow: hidden;
-      display: -webkit-box;
-      text-overflow: ellipsis;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-    }
+  .tag-name {
+    font-size: 40px;
+    color: white;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    padding: 0 30px;
+    overflow: hidden;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 }
 

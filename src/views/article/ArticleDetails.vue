@@ -4,7 +4,7 @@
     <blog-header />
 
     <!-- 二次元封面 -->
-    <kila-kila-wife-cover>
+    <blog-page-cover>
       <div class="article-info">
         <h1 class="article-title">
           {{ articleDetails.title }}
@@ -33,7 +33,7 @@
           </span>
         </div>
       </div>
-    </kila-kila-wife-cover>
+    </blog-page-cover>
 
     <div class="container">
       <!-- 侧边栏 -->
@@ -438,13 +438,6 @@ export default {
   display: flex;
   animation: fadeInUp 1s;
 }
-
-.wife-cover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .article-info {
   text-align: center;
   position: absolute;

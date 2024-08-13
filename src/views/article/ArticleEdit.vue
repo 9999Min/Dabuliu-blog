@@ -4,9 +4,9 @@
     <blog-header />
 
     <!-- 二次元封面 -->
-    <kila-kila-wife-cover>
+    <blog-page-cover>
       <h1>{{ title }}</h1>
-    </kila-kila-wife-cover>
+    </blog-page-cover>
 
     <!-- 编辑表单 -->
     <div class="edit-card">
@@ -307,20 +307,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.wife-cover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  h1 {
-    font-size: 35px;
-    font-weight: normal;
-    color: white;
-    line-height: 1.5;
-    margin-bottom: 15px;
-    position: absolute;
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-  }
+h1 {
+  font-size: 35px;
+  font-weight: normal;
+  color: white;
+  line-height: 1.5;
+  margin-bottom: 15px;
+  position: absolute;
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 .edit-card {

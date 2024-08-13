@@ -14,11 +14,10 @@ export default {
 .wife-cover {
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
-  /* background-image: url(https://api.yimian.xyz/img?type=moe&size=1920x*); */
-  /* background-image: url(https://api.vvhan.com/api/acgimg); */
+  background-position: top;
+  background-image: url("../assets/image/beimode.png");
   /* background-image: url(http://www.dmoe.cc/random.php); */
-  background-image: url(https://api.ghser.com/random/api.php);
+  /* background-image: url(https://api.ghser.com/random/api.php); */
   height: 400px;
   width: 100%;
   animation: fadeUpInCover 1s;
@@ -30,11 +29,6 @@ export default {
   background-color: rgba(0, 0, 0, 0.3);
   content: "";
   position: absolute;
-}
-
-.side-content {
-  width: 26%;
-  margin-right: 20px;
 }
 
 @keyframes fadeUpInCover {
