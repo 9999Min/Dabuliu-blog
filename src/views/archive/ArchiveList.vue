@@ -5,7 +5,9 @@
 
     <!-- 二次元封面 -->
     <blog-page-cover>
-      <h1>归档</h1>
+      <template #default="slotProps">
+        <h1 :style="slotProps.hOneStyle">归档</h1>
+      </template>
     </blog-page-cover>
 
     <div class="container">
@@ -151,18 +153,6 @@ export default {
   animation: fadeInUp 1s;
 }
 
-h1 {
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-  font-size: 40px;
-  color: white;
-  line-height: 1.5;
-  margin-bottom: 15px;
-  padding: 0 30px;
-  box-sizing: border-box;
-}
 .archive-body {
   width: 74%;
   height: 100%;

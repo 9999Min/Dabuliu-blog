@@ -5,12 +5,14 @@
 
     <!-- 二次元封面 -->
     <blog-page-cover>
-      <h1>{{ title }}</h1>
+      <template #default="slotProps">
+        <h1 :style="slotProps.hOneStyle">{{ title }}</h1>
+      </template>
     </blog-page-cover>
 
     <!-- 编辑表单 -->
     <div class="edit-card">
-      <h1 class="kila-kila-blog-title">✨ Kila Kila Blog ✨</h1>
+      <h1 class="kila-kila-blog-title">{{ EnumModule.BLOG_TITLE }}</h1>
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -118,6 +120,7 @@
 </template>
 
 <script>
+import EnumModule from "../../constant";
 import { ref, reactive, computed, nextTick } from "vue";
 import { mapState } from "../../store/map";
 import { ElMessage, ElMessageBox } from "element-plus";
@@ -307,16 +310,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-h1 {
-  font-size: 35px;
-  font-weight: normal;
-  color: white;
-  line-height: 1.5;
-  margin-bottom: 15px;
-  position: absolute;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-}
-
 .edit-card {
   background: white;
   border-radius: 8px;

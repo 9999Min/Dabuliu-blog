@@ -5,7 +5,9 @@
 
     <!-- 二次元封面 -->
     <blog-page-cover>
-      <h1>标签</h1>
+      <template #default="slotProps">
+        <h1 :style="slotProps.hOneStyle">标签</h1>
+      </template>
     </blog-page-cover>
 
     <div class="container">
@@ -49,19 +51,6 @@ export default {
   margin: 0 auto;
   display: flex;
   animation: fadeInUp 1s;
-}
-
-h1 {
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-  font-size: 40px;
-  color: white;
-  line-height: 1.5;
-  margin-bottom: 15px;
-  padding: 0 30px;
-  box-sizing: border-box;
 }
 
 .cloud-card {

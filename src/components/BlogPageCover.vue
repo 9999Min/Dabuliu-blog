@@ -1,8 +1,28 @@
 <template>
   <div class="page-cover">
-    <slot></slot>
+    <slot :hOneStyle="styles"></slot>
   </div>
 </template>
+
+<script setup>
+import { reactive } from "vue";
+
+const styles = reactive({
+  textAlign: "center",
+  position: "absolute",
+  textShadow: "0 3px 6px rgba(0,0,0,0.4)",
+  color: "white",
+  lineHeight: 1.5,
+  padding: "0 30px",
+  marginBottom: "15px",
+  overflow: "hidden",
+  display: "-webkit-box",
+  textOverflow: "ellipsis",
+  "-webkit-line-clamp": "vertical",
+  lineClamp: 3,
+  boxSizing: "border-box",
+});
+</script>
 
 <style lang="less" scoped>
 .page-cover {
@@ -16,18 +36,6 @@
   height: 400px;
   width: 100%;
   animation: fadeUpInCover 1s;
-  h1 {
-    width: 100%;
-    text-align: center;
-    position: absolute;
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-    font-size: 40px;
-    color: white;
-    line-height: 1.5;
-    margin-bottom: 15px;
-    padding: 0 30px;
-    box-sizing: border-box;
-  }
 }
 /* 遮罩层 */
 .page-cover::before {

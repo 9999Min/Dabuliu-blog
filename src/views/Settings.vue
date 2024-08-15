@@ -4,9 +4,11 @@
     <blog-header />
 
     <!-- 二次元封面 -->
-    <kila-kila-wife-cover>
-      <h1>个人中心</h1>
-    </kila-kila-wife-cover>
+    <blog-page-cover>
+      <template #default="slotProps">
+        <h1 :style="slotProps.hOneStyle">个人中心</h1>
+      </template>
+    </blog-page-cover>
 
     <!-- 个人信息 -->
     <div class="user-info-card">
@@ -305,30 +307,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.wife-cover {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  h1 {
-    text-align: center;
-    position: absolute;
-    width: 100%;
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-    font-size: 40px;
-    color: white;
-    line-height: 1.5;
-    margin-bottom: 15px;
-    padding: 0 30px;
-    overflow: hidden;
-    display: -webkit-box;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    box-sizing: border-box;
-  }
-}
-
 .user-info-card {
   background: white;
   border-radius: 8px;
