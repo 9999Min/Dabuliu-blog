@@ -12,7 +12,7 @@
 
     <!-- 编辑表单 -->
     <div class="edit-card">
-      <h1 class="kila-kila-blog-title">{{ EnumModule.BLOG_TITLE }}</h1>
+      <h1 class="kila-kila-blog-title">11111</h1>
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -119,194 +119,222 @@
   </div>
 </template>
 
-<script>
-import EnumModule from "../../constant";
-import { ref, reactive, computed, nextTick } from "vue";
+<script setup>
+import { ref, reactive, computed, nextTick, defineProps } from "vue";
 import { mapState } from "../../store/map";
-import { ElMessage, ElMessageBox } from "element-plus";
 import { addArticle, editArticle, getArticleDetails } from "../../api/article";
 import { uploadImage } from "../../api/image";
+import { ElMessage, ElMessageBox } from "element-plus";
 import router from "../../router";
 import bus from "../../utils/bus";
 import markdownIt from "../../utils/markdown-it";
+const props = defineProps(["id"]);
+/**
+ * 当前的模式，标题
+ */
+const isInEditMode = props.id ? true : false;
+const title = computed(() => {
+  return isInEditMode ? "编辑博客" : "新博客";
+});
+/**
+ * 文章内容
+ */
+// const content = ref("");
+// 获取标签元素
+const mavonRef = ref();
+const ruleFormRef = ref();
+const uploaderRef = ref();
 
-export default {
-  name: "ArticleEdit",
-  setup(props) {
-    let isInEditMode = props.id ? true : false;
-    let content = ref("");
-    let mavonRef = ref();
-    let ruleFormRef = ref();
-    let uploaderRef = ref();
-    let title = computed(() => (isInEditMode ? "编辑博客" : "新随笔"));
-    let { categoryCounts } = mapState("categoryAbout");
-    let { tagCounts } = mapState("tagAbout");
-    let categories = computed(() => {
-      return categoryCounts.value.map((i) => ({
-        value: i.name,
-        label: i.name,
-      }));
-    });
-    let tags = computed(() => {
-      return tagCounts.value.map((i) => ({
-        value: i.name,
-        label: i.name,
-      }));
-    });
-
-    let ruleForm = reactive({
-      id: undefined,
-      title: "",
-      summary: "",
-      content: "",
-      category: "",
-      tags: [],
-      thumbnail: "",
-      isDraft: false,
-    });
-    let rules = reactive({
-      title: [
-        {
-          required: true,
-          message: "文章标题不能为空",
-          trigger: "change",
-        },
-      ],
-      content: [
-        {
-          required: true,
-          message: "文章内容不能为空",
-          trigger: "change",
-        },
-      ],
-      category: [
-        {
-          required: true,
-          message: "分类不能为空",
-          trigger: "change",
-        },
-      ],
-    });
-
-    // 如果有传入文章 id 需要先获取文章信息
-    if (isInEditMode) {
-      getArticleDetails(props.id).then((data) => {
-        Object.assign(ruleForm, data);
-        ruleForm.category = data.categoryName;
-        ruleForm.tags = data.tags.map((t) => t.name);
-        if (data.thumbnail) {
-          uploaderRef.value.setImageUrl(data.thumbnail);
-          uploaderRef.value.isSuccessLabelVisible = true;
-        }
-      });
-    }
-
-    function onImageAdded(pos, file) {
-      uploadImage(file).then((url) => {
-        mavonRef.value.$img2Url(pos, url);
-      });
-    }
-
-    function handleThumbnailUploaded(url) {
-      ruleForm.thumbnail = url;
-      document.getElementById("submit-button").disabled = false;
-      document.getElementById("draft-button").disabled = false;
-    }
-
-    function handleAboutToUploadThumbnail() {
-      document.getElementById("submit-button").disabled = true;
-      document.getElementById("draft-button").disabled = true;
-    }
-
-    function handleRemoveThumbnail() {
-      ruleForm.thumbnail = "";
-    }
-
-    function submitForm(form, isDraft) {
-      if (!validateForm(form)) return;
-
-      ruleForm.isDraft = isDraft;
-      generateSummary();
-
-      let name = isDraft ? "草稿" : "博客";
-      if (!isInEditMode) {
-        addArticle(ruleForm).then((id) => {
-          ElMessage.success(name + "保存成功啦");
-          setTimeout(() => {
-            router.push("/article/" + id);
-          }, 1500);
-        });
-      } else {
-        editArticle(ruleForm).then((id) => {
-          ElMessage.success(name + "编辑成功啦");
-          bus.emit("articlePosted");
-          setTimeout(() => {
-            router.push("/article/" + id);
-          }, 1500);
-        });
-      }
-    }
-
-    function cancelSubmit() {
-      ElMessageBox.confirm(
-        "前辈已经想好要取消这篇博客的发表了吗？",
-        "一条友善的提示",
-        {
-          confirmButtonText: "你在教我做事？",
-          cancelButtonText: "我再想想",
-          type: "warning",
-        }
-      ).then(() => {
-        router.push("/");
-      });
-    }
-
-    function validateForm(form) {
-      if (!form) return false;
-
-      form.validate((valid) => {
-        if (!valid) {
-          ElMessage.error("必填字段不能为空哦");
-          return false;
-        }
-      });
-
-      return true;
-    }
-
-    function generateSummary() {
-      if (ruleForm.summary) {
-        return;
-      }
-
-      let html = markdownIt.render(ruleForm.content);
-      ruleForm.summary = html.replace(/<[^>]+>/g, "").slice(0, 150);
-    }
-
-    nextTick(() => {
-      window.scrollTo({ top: 0 });
-    });
-
+/**
+ * 从仓库中获取分类和标签并处理
+ */
+const { categoryCounts } = mapState("categoryAbout");
+const { tagCounts } = mapState("tagAbout");
+const categories = computed(() => {
+  return categoryCounts.value.map((i) => {
     return {
-      title,
-      content,
-      ruleForm,
-      ruleFormRef,
-      uploaderRef,
-      rules,
-      categories,
-      tags,
-      onImageAdded,
-      mavonRef,
-      handleThumbnailUploaded,
-      handleAboutToUploadThumbnail,
-      handleRemoveThumbnail,
-      submitForm,
-      cancelSubmit,
+      value: i.name,
+      label: i.name,
     };
-  },
-  props: ["id"],
-};
+  });
+});
+const tags = computed(() => {
+  return tagCounts.value.map((i) => {
+    return {
+      value: i.name,
+      label: i.name,
+    };
+  });
+});
+
+/**
+ * 表单的所有数据
+ */
+
+const ruleForm = reactive({
+  id: undefined,
+  title: "",
+  summary: "",
+  content: "",
+  category: "",
+  tags: [],
+  thumbnail: "",
+  isDraft: false,
+});
+
+/**
+ * 表单校验规则
+ */
+const rules = reactive({
+  title: [
+    {
+      required: true,
+      message: "文章标题不能为空",
+      trigger: "change",
+    },
+  ],
+  content: [
+    {
+      required: true,
+      message: "文章内容不能为空",
+      trigger: "change",
+    },
+  ],
+  category: [
+    {
+      required: true,
+      message: "请选择一个分类",
+      trigger: "change",
+    },
+  ],
+});
+
+/**
+ * 如果是编辑状态需要先获取文章信息
+ *
+ */
+
+if (isInEditMode) {
+  getArticleDetails(props.id).then((data) => {
+    Object.assign(ruleForm, data);
+    ruleForm.category = data.categoryName;
+    ruleForm.tags = data.tags.map((tag) => {
+      return tag.name;
+    });
+    if (data.thumbnail) {
+      uploaderRef.value.setImageUrl(data.thumbnail);
+      uploaderRef.value.isSuccessLabelVisible = true;
+    }
+  });
+}
+
+// 添加图片方法
+function onImageAdded(pos, file) {
+  console.log(mavonRef.value);
+  uploadImage(file).then((url) => {
+    mavonRef.value.$img2Url(pos, url);
+  });
+}
+/**
+ * 上传成功后取消禁用
+ * @param url
+ */
+function handleThumbnailUploaded(url) {
+  ruleForm.thumbnail = url;
+  document.getElementById("submit-button").disabled = false;
+  document.getElementById("draft-button").disabled = false;
+}
+/**
+ * 上传成功前禁用
+ */
+function handleAboutToUploadThumbnail() {
+  document.getElementById("submit-button").disabled = true;
+  document.getElementById("draft-button").disabled = true;
+}
+
+/**
+ * 删除缩略图方法
+ */
+function handleRemoveThumbnail() {
+  ruleForm.thumbnail = "";
+}
+/**
+ * 表单校验方法
+ * @param form
+ */
+function validateForm(form) {
+  if (!form) return false;
+
+  form.validate((valid) => {
+    if (!valid) {
+      ElMessage.error("必填字段不能为空哦");
+      return false;
+    }
+  });
+
+  return true;
+}
+/**
+ * 处理概要内容，有不处理，没有就截取内容的前150个字符
+ */
+function generateSummary() {
+  if (ruleForm.summary) {
+    return;
+  }
+
+  const html = markdownIt.render(ruleForm.content);
+  ruleForm.summary = html.replace(/<[^>]+>/g, "").slice(0, 150);
+}
+
+nextTick(() => {
+  window.scrollTo({ top: 0 });
+});
+/**
+ * 文章发布方法
+ * @param form 表单数据
+ * @param isDraft 是否为草稿
+ */
+function submitForm(form, isDraft) {
+  if (!validateForm(form)) return;
+
+  ruleForm.isDraft = isDraft;
+  generateSummary();
+
+  const name = isDraft ? "草稿" : "博客";
+  if (!isInEditMode) {
+    addArticle(ruleForm).then((id) => {
+      ElMessage.success(name + "保存成功啦");
+      setTimeout(() => {
+        router.push("/article/" + id);
+      }, 1500);
+    });
+  } else {
+    editArticle(ruleForm).then((id) => {
+      ElMessage.success(name + "编辑成功啦");
+      bus.emit("articlePosted");
+      setTimeout(() => {
+        router.push("/article/" + id);
+      }, 1500);
+    });
+  }
+}
+
+/**
+ * 取消发布的方法
+ */
+function cancelSubmit() {
+  ElMessageBox.confirm(
+    "前辈已经想好要取消这篇博客的发表了吗？",
+    "一条友善的提示",
+    {
+      confirmButtonText: "你是在教我做事？",
+      cancelButtonText: "我再想想",
+      type: "warning",
+    }
+  ).then(() => {
+    router.push("/");
+  });
+}
 </script>
 
 <style lang="less" scoped>
