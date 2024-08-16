@@ -40,7 +40,7 @@
       <blog-side-bar>
         <blog-admin-card />
         <div class="sticky-layout">
-          <kila-kila-catalog-card v-if="articleLoaded" />
+          <blog-catalog-card v-if="articleLoaded" />
           <blog-hot-article-card />
         </div>
       </blog-side-bar>
