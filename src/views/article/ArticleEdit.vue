@@ -12,7 +12,7 @@
 
     <!-- 编辑表单 -->
     <div class="edit-card">
-      <h1 class="kila-kila-blog-title">11111</h1>
+      <h1 class="kila-kila-blog-title">{{ EnumModule.BLOG_TITLE }}</h1>
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -85,7 +85,7 @@
 
         <!-- 缩略图 -->
         <el-form-item prop="thumbnail" label="缩略图">
-          <kila-kila-uploader
+          <blog-uploader
             @uploaded="handleThumbnailUploaded"
             @aboutToUpload="handleAboutToUploadThumbnail"
             @removed="handleRemoveThumbnail"
@@ -120,6 +120,7 @@
 </template>
 
 <script setup>
+import EnumModule from "../../constant/index";
 import { ref, reactive, computed, nextTick, defineProps } from "vue";
 import { mapState } from "../../store/map";
 import { addArticle, editArticle, getArticleDetails } from "../../api/article";
