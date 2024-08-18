@@ -14,7 +14,7 @@
       <!-- 侧边栏 -->
       <blog-side-bar />
 
-      <kila-kila-word-cloud-card :words="tagCounts" baseUrl="/tag" />
+      <blog-word-card :words="tagCounts" baseUrl="/tag" />
     </div>
 
     <!-- 页脚 -->
@@ -53,13 +53,13 @@ export default {
   animation: fadeInUp 1s;
 }
 
-.cloud-card {
+:deep(.clou-card) {
   width: 74%;
   margin: 0;
 }
 
 @media screen and (max-width: 900px) {
-  .cloud-card {
+  :deep(.cloud-card) {
     width: 100%;
   }
 }
