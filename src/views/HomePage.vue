@@ -1,10 +1,11 @@
 <template>
-  <div id="home">
+  <div class="home">
     <!-- 页头 -->
     <blog-header />
-    <!-- 封面 -->
-    <blog-cover></blog-cover>
 
+    <!-- 封面 -->
+    <blog-cover />
+    <!-- 内容区 -->
     <div class="container">
       <!-- 侧边栏 -->
       <div class="side-content">
@@ -24,10 +25,9 @@
           :reverse="index % 2 == 1"
         />
 
-        <!-- 分页 -->
         <el-pagination
           background
-          layout="prev, pager, next"
+          layout="prev,pager,next"
           :total="articleCount"
           :page-size="EnumModule.ARTICLE_PAGESIZE"
           id="pagination"
@@ -36,20 +36,28 @@
         />
       </div>
     </div>
-
     <!-- 页脚 -->
     <blog-footer :adminName="$store.state.adminAbout.adminInfo.nickName" />
 
-    <!-- 滚动到顶部按钮 -->
+    <!-- 滚动到顶部组件 -->
     <blog-back-to-top />
   </div>
 </template>
+
+<script>
+export default {
+  name: "Home",
+};
+</script>
 
 <script setup>
 import { reactive, ref } from "vue";
 import { getPostArticleList } from "../api/article";
 import { defaultThumbnail } from "../utils/thumbnail";
 import EnumModule from "../constant";
+
+window.scrollTo({ top: 0 });
+
 const postArticles = reactive([]);
 const articleCount = ref(0);
 
@@ -72,7 +80,7 @@ async function onCurrentPageChanged(pageNum) {
 </script>
 
 <style lang="less" scoped>
-#home {
+.home {
   height: 100%;
   width: 100%;
   .container {

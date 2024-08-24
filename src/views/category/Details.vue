@@ -22,7 +22,7 @@
           :article="article"
           :reverse="index % 2 == 1"
         />
-
+        <!-- 分页器 -->
         <el-pagination
           background
           layout="prev,pager,next"
