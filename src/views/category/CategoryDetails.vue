@@ -1,5 +1,5 @@
 <template>
-  <div id="category-details">
+  <div class="category-details">
     <!-- 页头 -->
     <blog-header />
 
@@ -32,8 +32,7 @@
           id="pagination"
           @current-change="onCurrentPageChanged"
           v-if="articleCount > 0"
-        >
-        </el-pagination>
+        />
       </div>
     </div>
 
@@ -94,56 +93,55 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#category-details {
-  height: 100%;
+.category-details {
   width: 100%;
-}
+  height: 100%;
+  .container {
+    padding: 40px 15px;
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    animation: fadeInUp 1s;
 
-.container {
-  padding: 40px 15px;
-  max-width: 1300px;
-  margin: 0 auto;
-  display: flex;
-  animation: fadeInUp 1s;
-}
+    .post-article-list {
+      width: 74%;
 
-.post-article-list {
-  width: 74%;
+      .post-article-card {
+        margin-top: 20px;
+      }
 
-  .post-article-card {
-    margin-top: 20px;
-  }
+      .post-article-card:nth-child(1) {
+        margin-top: 0;
+      }
 
-  .post-article-card:nth-child(1) {
-    margin-top: 0;
-  }
-}
+      :deep(#pagination) {
+        margin-top: 20px;
+        justify-content: center;
 
-:deep(#pagination) {
-  margin-top: 20px;
-  justify-content: center;
+        & > button {
+          box-shadow: var(--card-box-shadow);
+          background: white;
+          border-radius: 8px;
+          height: 35px;
+          width: 35px;
+        }
 
-  & > button {
-    box-shadow: var(--card-box-shadow);
-    background: white;
-    border-radius: 8px;
-    height: 35px;
-    width: 35px;
-  }
+        li {
+          box-shadow: var(--card-box-shadow);
+          background-color: white;
+          border-radius: 8px;
+          margin: 0 6px;
+          height: 35px;
+          width: 35px;
+        }
 
-  li {
-    box-shadow: var(--card-box-shadow);
-    background-color: white;
-    border-radius: 8px;
-    margin: 0 6px;
-    height: 35px;
-    width: 35px;
-  }
-
-  li.active {
-    color: white;
-    background: var(--theme-color);
-    font-weight: normal;
+        li.active {
+          color: white;
+          background: var(--theme-color);
+          font-weight: normal;
+        }
+      }
+    }
   }
 }
 

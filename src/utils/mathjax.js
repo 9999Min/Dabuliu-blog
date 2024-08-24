@@ -44,6 +44,7 @@ export function initMathJax(options = {}, callback) {
 
 /**
  * 渲染指定容器中的数学公式
+ * 这个函数通常用于在动态内容加载后，确保页面上的数学公式正确显示。
  * @param {string} el 需要被渲染的容器
  * @returns Promise
  */

@@ -65,6 +65,7 @@ onBeforeUnmount(() => {
   color: rgb(133, 133, 133);
   text-align: center;
   position: absolute;
+  animation: fadeInUp 1s;
 }
 
 /* .footer-image {
@@ -123,6 +124,17 @@ onBeforeUnmount(() => {
   70%,
   80% {
     transform: scale(1.1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
   }
 }
 </style>

@@ -1,20 +1,20 @@
 <template>
-  <div id="archive-details">
+  <div class="tag-details">
     <!-- 页头 -->
     <blog-header />
 
-    <!-- 二次元封面 -->
+    <!-- 封面 -->
     <blog-page-cover>
       <template #default="slotProps">
-        <h1 :style="slotProps.hOneStyle">{{ year }} 年 {{ month }} 月</h1>
+        <h1 :style="slotProps.hOneStyle">{{ tagName }}</h1>
       </template>
     </blog-page-cover>
-
+    <!-- 内容区 -->
     <div class="container">
       <!-- 侧边栏 -->
       <blog-side-bar />
 
-      <!-- 发表的文章 -->
+      <!-- 标签的文章 -->
       <div class="post-article-list">
         <blog-post-article-card
           v-for="(article, index) in postArticles"
@@ -46,52 +46,47 @@
 </template>
 
 <script>
-import { reactive, ref } from "vue";
-import { getPostArticleList } from "../../api/article";
-import { defaultThumbnail } from "../../utils/thumbnail";
-
 export default {
-  name: "ArchiveDetails",
-  setup(props) {
-    let pageSize = 10;
-    let postArticles = reactive([]);
-    let articleCount = ref(0);
-
-    onCurrentPageChanged(1);
-
-    function onCurrentPageChanged(pageNum) {
-      getPostArticleList(
-        pageNum,
-        pageSize,
-        null,
-        null,
-        props.year + "/" + props.month
-      ).then((data) => {
-        articleCount.value = parseInt(data.total);
-        data.rows.forEach((article) => {
-          article.createTime = article.createTime.split(" ")[0];
-          article.thumbnail = article.thumbnail || defaultThumbnail;
-        });
-
-        postArticles.splice(0, postArticles.length, ...data.rows);
-      });
-    }
-
-    window.scrollTo({ top: 0 });
-
-    return {
-      postArticles,
-      articleCount,
-      pageSize,
-      onCurrentPageChanged,
-    };
-  },
-  props: ["year", "month"],
+  name: "TagDetails",
 };
 </script>
 
+<script setup>
+import { computed, reactive, ref, defineProps } from "vue";
+import { getPostArticleList } from "../../api/article";
+import { defaultThumbnail } from "../../utils/thumbnail";
+import { mapState } from "../../store/map";
+
+window.scrollTo({ top: 0 });
+
+const props = defineProps(["id", "name"]);
+
+const pageSize = 10;
+const postArticles = reactive([]);
+const articleCount = ref(0);
+const { tagCounts } = mapState("tagAbout");
+const tagName = computed(() => {
+  let map = Object.fromEntries(tagCounts.value.map((t) => [t.id, t.name]));
+  return map[props.id];
+});
+
+onCurrentPageChanged(1);
+
+function onCurrentPageChanged(pageNum) {
+  getPostArticleList(pageNum, pageSize, null, props.id).then((data) => {
+    articleCount.value = parseInt(data.total);
+    data.rows.forEach((article) => {
+      article.createTime = article.createTime.split(" ")[0];
+      article.thumbnail = article.thumbnail || defaultThumbnail;
+    });
+
+    postArticles.splice(0, postArticles.length, ...data.rows);
+  });
+}
+</script>
+
 <style lang="less" scoped>
-#archive-details {
+.tag-details {
   height: 100%;
   width: 100%;
   .container {
@@ -141,6 +136,7 @@ export default {
     }
   }
 }
+
 @media screen and (max-width: 900px) {
   .post-article-list {
     width: 100%;

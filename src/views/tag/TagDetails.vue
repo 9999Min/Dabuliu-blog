@@ -1,5 +1,5 @@
 <template>
-  <div id="tag-details">
+  <div class="tag-details">
     <!-- 页头 -->
     <blog-header />
 
@@ -92,56 +92,54 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#tag-details {
+.tag-details {
   height: 100%;
   width: 100%;
-}
+  .container {
+    padding: 40px 15px;
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    animation: fadeInUp 1s;
+    .post-article-list {
+      width: 74%;
 
-.container {
-  padding: 40px 15px;
-  max-width: 1300px;
-  margin: 0 auto;
-  display: flex;
-  animation: fadeInUp 1s;
-}
+      .post-article-card {
+        margin-top: 20px;
+      }
 
-.post-article-list {
-  width: 74%;
+      .post-article-card:nth-child(1) {
+        margin-top: 0;
+      }
 
-  .post-article-card {
-    margin-top: 20px;
-  }
+      :deep(#pagination) {
+        margin-top: 20px;
+        justify-content: center;
 
-  .post-article-card:nth-child(1) {
-    margin-top: 0;
-  }
-}
+        & > button {
+          box-shadow: var(--card-box-shadow);
+          background: white;
+          border-radius: 8px;
+          height: 35px;
+          width: 35px;
+        }
 
-:deep(#pagination) {
-  margin-top: 20px;
-  justify-content: center;
+        li {
+          box-shadow: var(--card-box-shadow);
+          background-color: white;
+          border-radius: 8px;
+          margin: 0 6px;
+          height: 35px;
+          width: 35px;
+        }
 
-  & > button {
-    box-shadow: var(--card-box-shadow);
-    background: white;
-    border-radius: 8px;
-    height: 35px;
-    width: 35px;
-  }
-
-  li {
-    box-shadow: var(--card-box-shadow);
-    background-color: white;
-    border-radius: 8px;
-    margin: 0 6px;
-    height: 35px;
-    width: 35px;
-  }
-
-  li.active {
-    color: white;
-    background: var(--theme-color);
-    font-weight: normal;
+        li.active {
+          color: white;
+          background: var(--theme-color);
+          font-weight: normal;
+        }
+      }
+    }
   }
 }
 

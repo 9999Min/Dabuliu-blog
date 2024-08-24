@@ -1,30 +1,27 @@
 <template>
-  <div id="archive-list">
+  <div class="archive-list">
     <!-- 页头 -->
     <blog-header />
-
-    <!-- 二次元封面 -->
+    <!-- 封面 -->
     <blog-page-cover>
       <template #default="slotProps">
         <h1 :style="slotProps.hOneStyle">归档</h1>
       </template>
     </blog-page-cover>
 
+    <!-- 内容区 -->
     <div class="container">
-      <!-- 侧边栏 -->
       <blog-side-bar />
 
-      <!-- 归档 -->
       <div class="archive-body">
         <div class="archive-card">
-          <el-timeline class="timeline">
+          <el-timeline>
             <el-timeline-item
               center
               :timestamp="`历史文章 - ${articleCount}`"
               placement="top"
               class="root-item"
-            >
-            </el-timeline-item>
+            ></el-timeline-item>
 
             <el-timeline-item
               v-for="archive in archives"
@@ -53,21 +50,21 @@
                   <router-link
                     :to="`/article/${article.id}`"
                     class="article-title"
-                    >{{ article.title }}
-                  </router-link>
+                    >{{ article.title }}</router-link
+                  >
                   <div class="article-meta-data">
-                    <span
-                      ><font-awesome-icon
-                        :icon="['fas', 'calendar-days']"
+                    <span>
+                      <font-awesome-icon
+                        :icon="['fas', 'calender-days']"
                         class="article-meta-data-icon"
-                      />发表于 {{ article.createTime }}</span
-                    >
-                    <span
-                      ><font-awesome-icon
+                      />发表于{{ article.createTime }}
+                    </span>
+                    <span>
+                      <font-awesome-icon
                         :icon="['fas', 'eye']"
                         class="article-meta-data-icon"
-                      />{{ article.viewCount }}次围观</span
-                    >
+                      />{{ article.viewCount }}次围观
+                    </span>
                   </div>
                 </div>
               </div>
@@ -80,7 +77,7 @@
           background
           layout="prev, pager, next"
           :total="articleCount"
-          :page-size="pageSize"
+          :pageSize="pageSize"
           id="pagination"
           @current-change="onCurrentPageChanged"
           v-if="articleCount > 0"
@@ -90,57 +87,51 @@
 
     <!-- 页脚 -->
     <blog-footer />
-
     <!-- 回到顶部 -->
     <blog-back-to-top />
   </div>
 </template>
 
 <script>
+export default {
+  name: "ArchiveList",
+};
+</script>
+
+<script setup>
 import { mapState } from "../../store/map";
 import { getArchiveList } from "../../api/archive";
 import { computed, reactive } from "vue";
 import { defaultThumbnail, useDefaultThumbnail } from "../../utils/thumbnail";
 
-export default {
-  name: "ArchiveList",
-  setup() {
-    window.scrollTo({ top: 0 });
-    let pageSize = 10;
-    let archives = reactive([]);
-    let { articleCountInfo } = mapState("adminAbout");
-    let articleCount = computed(() => parseInt(articleCountInfo.value.article));
-    onCurrentPageChanged(1);
+window.scrollTo({ top: 0 });
 
-    function onCurrentPageChanged(pageNum) {
-      getArchiveList(pageNum, pageSize).then((data) => {
-        data.rows.forEach((archive) => {
-          archive.articles.forEach((article) => {
-            article.createTime = article.createTime.split(" ")[0];
-            article.thumbnail = article.thumbnail || defaultThumbnail;
-          });
-        });
+const pageSize = 10;
+const archives = reactive([]);
+const { articleCountInfo } = mapState("adminAbout");
+const articleCount = computed(() => {
+  return parseInt(articleCountInfo.value.article);
+});
 
-        archives.splice(0, archives.length, ...data.rows);
-
-        // 多插入一个啥也没有的节点
-        archives.push({ year: "", articles: [] });
+function onCurrentPageChanged(pageNum) {
+  getArchiveList(pageNum, pageSize).then((data) => {
+    data.rows.forEach((archive) => {
+      archive.articles.forEach((article) => {
+        article.createTime = article.createTime.split(" ")[0];
+        article.thumbnail = article.thumbnail || defaultThumbnail;
       });
-    }
+    });
+    archives.splice(0, archives.length, ...data.rows);
 
-    return {
-      articleCount,
-      pageSize,
-      archives,
-      onCurrentPageChanged,
-      useDefaultThumbnail,
-    };
-  },
-};
+    archives.push({ year: "", articles: [] });
+  });
+}
+
+onCurrentPageChanged(1);
 </script>
 
 <style lang="less" scoped>
-#archive-list {
+.archive-list {
   height: 100%;
   width: 100%;
   .container {

@@ -1,16 +1,16 @@
 <template>
-  <div class="arctile-edit">
+  <div class="article-edit">
     <!-- 页头 -->
     <blog-header />
 
-    <!-- 二次元封面 -->
+    <!-- 封面 -->
     <blog-page-cover>
       <template #default="slotProps">
         <h1 :style="slotProps.hOneStyle">{{ title }}</h1>
       </template>
     </blog-page-cover>
 
-    <!-- 编辑表单 -->
+    <!-- 编辑卡片 -->
     <div class="edit-card">
       <h1 class="blog-title">{{ EnumModule.BLOG_TITLE }}</h1>
       <el-form
@@ -20,30 +20,30 @@
         label-width="60px"
         class="edit-ruleForm"
       >
-        <!-- 标题 -->
+        <!-- 标题输入 -->
         <el-form-item prop="title" label="标题">
           <el-input
             v-model="ruleForm.title"
             class="w-50 m-3"
             size="large"
-            placeholder="给博客起一个好标题很重要哦"
-          ></el-input>
+            placeholder="给博客起个标题吧"
+          />
         </el-form-item>
 
-        <!-- 摘要 -->
+        <!-- 摘要输入 -->
         <el-form-item prop="summary" label="摘要">
           <el-input
             v-model="ruleForm.summary"
             class="w-50 m-3"
-            size="large"
-            type="textarea"
-            placeholder="简要介绍一下这篇博客吧"
-          ></el-input>
+            size="textarea"
+            placeholder="简要介绍一下博客吧"
+          />
         </el-form-item>
 
+        <!-- 选择器 -->
         <div class="inline-form-row">
-          <!-- 分类 -->
-          <el-form-item label="分类" prop="category" inline style="width: 35%">
+          <!-- 分类选择 -->
+          <el-form-item prop="category" label="分类" inline style="width: 35%">
             <el-select-v2
               v-model="ruleForm.category"
               :options="categories"
@@ -54,13 +54,12 @@
               clearable
             />
           </el-form-item>
-
-          <!-- 标签 -->
-          <el-form-item label="标签" prop="tag" inline style="width: 60%">
+          <!-- 标签选择 -->
+          <el-form-item prop="tag" label="标签" inline style="width: 60%">
             <el-select-v2
               v-model="ruleForm.tags"
               :options="tags"
-              placeholder="来贴几个标签吧"
+              placeholder="给博客贴几个标签吧"
               style="width: 100%; vertical-align: middle"
               multiple
               allow-create
@@ -119,6 +118,12 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: "ArticleEdit",
+};
+</script>
+
 <script setup>
 import EnumModule from "../../constant/index";
 import { ref, reactive, computed, nextTick, defineProps } from "vue";
@@ -129,49 +134,52 @@ import { ElMessage, ElMessageBox } from "element-plus";
 import router from "../../router";
 import bus from "../../utils/bus";
 import markdownIt from "../../utils/markdown-it";
+
+// 加载完成后回到顶部
+nextTick(() => {
+  window.scrollTo({ top: 0 });
+});
+
 const props = defineProps(["id"]);
-/**
- * 当前的模式，标题
- */
+//模式
 const isInEditMode = props.id ? true : false;
+//标题
 const title = computed(() => {
   return isInEditMode ? "编辑博客" : "新博客";
 });
-/**
- * 文章内容
- */
-// const content = ref("");
-// 获取标签元素
+// 获取dom节点
 const mavonRef = ref();
 const ruleFormRef = ref();
 const uploaderRef = ref();
 
 /**
- * 从仓库中获取分类和标签并处理
+ * 从仓库中获取分类数据处理
  */
 const { categoryCounts } = mapState("categoryAbout");
-const { tagCounts } = mapState("tagAbout");
 const categories = computed(() => {
-  return categoryCounts.value.map((i) => {
+  return categoryCounts.value.map((c) => {
     return {
-      value: i.name,
-      label: i.name,
+      value: c.name,
+      label: c.name,
     };
   });
 });
+/**
+ * 从仓库中获取标签数据处理
+ */
+const { tagCounts } = mapState("tagAbout");
 const tags = computed(() => {
-  return tagCounts.value.map((i) => {
+  return tagCounts.value.map((t) => {
     return {
-      value: i.name,
-      label: i.name,
+      value: t.name,
+      label: t.name,
     };
   });
 });
 
 /**
- * 表单的所有数据
+ * 表单数据
  */
-
 const ruleForm = reactive({
   id: undefined,
   title: "",
@@ -209,19 +217,17 @@ const rules = reactive({
     },
   ],
 });
-
 /**
  * 如果是编辑状态需要先获取文章信息
- *
  */
-
 if (isInEditMode) {
   getArticleDetails(props.id).then((data) => {
     Object.assign(ruleForm, data);
     ruleForm.category = data.categoryName;
-    ruleForm.tags = data.tags.map((tag) => {
-      return tag.name;
+    ruleForm.tags = data.tags.map((t) => {
+      return t.name;
     });
+
     if (data.thumbnail) {
       uploaderRef.value.setImageUrl(data.thumbnail);
       uploaderRef.value.isSuccessLabelVisible = true;
@@ -229,21 +235,12 @@ if (isInEditMode) {
   });
 }
 
-// 添加图片方法
 function onImageAdded(pos, file) {
   uploadImage(file).then((url) => {
     mavonRef.value.$img2Url(pos, url);
   });
 }
-/**
- * 上传成功后取消禁用
- * @param url
- */
-function handleThumbnailUploaded(url) {
-  ruleForm.thumbnail = url;
-  document.getElementById("submit-button").disabled = false;
-  document.getElementById("draft-button").disabled = false;
-}
+
 /**
  * 上传成功前禁用
  */
@@ -253,11 +250,22 @@ function handleAboutToUploadThumbnail() {
 }
 
 /**
+ * 上传成功后取消禁用
+ * @param url
+ */
+function handleThumbnailUploaded(url) {
+  ruleForm.thumbnail = url;
+  document.getElementById("submit-button").disabled = false;
+  document.getElementById("draft-button").disabled = false;
+}
+
+/**
  * 删除缩略图方法
  */
 function handleRemoveThumbnail() {
   ruleForm.thumbnail = "";
 }
+
 /**
  * 表单校验方法
  * @param form
@@ -274,6 +282,7 @@ function validateForm(form) {
 
   return true;
 }
+
 /**
  * 处理概要内容，有不处理，没有就截取内容的前150个字符
  */
@@ -286,9 +295,6 @@ function generateSummary() {
   ruleForm.summary = html.replace(/<[^>]+>/g, "").slice(0, 150);
 }
 
-nextTick(() => {
-  window.scrollTo({ top: 0 });
-});
 /**
  * 文章发布方法
  * @param form 表单数据

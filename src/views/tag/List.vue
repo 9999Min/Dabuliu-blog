@@ -1,12 +1,12 @@
 <template>
-  <div id="category-list">
+  <div class="tag-list">
     <!-- 页头 -->
     <blog-header />
 
     <!-- 二次元封面 -->
     <blog-page-cover>
       <template #default="slotProps">
-        <h1 :style="slotProps.hOneStyle">分类</h1>
+        <h1 :style="slotProps.hOneStyle">标签</h1>
       </template>
     </blog-page-cover>
 
@@ -14,8 +14,7 @@
       <!-- 侧边栏 -->
       <blog-side-bar />
 
-      <!-- 标签云卡片 -->
-      <blog-word-card :words="categoryCounts" baseUrl="/category" />
+      <blog-word-card :words="tagCounts" baseUrl="/tag" />
     </div>
 
     <!-- 页脚 -->
@@ -27,21 +26,21 @@
 </template>
 
 <script>
-import { mapState } from "../../store/map";
-
 export default {
-  name: "CategoryList",
-  setup() {
-    window.scrollTo({ top: 0 });
-    let { categoryCounts } = mapState("categoryAbout");
-
-    return { categoryCounts };
-  },
+  name: "TagList",
 };
 </script>
 
+<script setup>
+import { mapState } from "../../store/map";
+
+window.scrollTo({ top: 0 });
+
+const { tagCounts } = mapState("tagAbout");
+</script>
+
 <style lang="less" scoped>
-.category-list {
+.tag-list {
   width: 100%;
   height: 100%;
   .container {
@@ -61,6 +60,18 @@ export default {
 @media screen and (max-width: 900px) {
   :deep(.cloud-card) {
     width: 100%;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    margin-top: 50px;
+    opacity: 0;
+  }
+
+  to {
+    margin-top: 0;
+    opacity: 1;
   }
 }
 </style>

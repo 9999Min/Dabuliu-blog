@@ -27,7 +27,7 @@ const routes = [
   },
   {
     path: "/register",
-    name: "Register",
+    namee: "Register",
     component: Register,
   },
   {
@@ -42,6 +42,7 @@ const routes = [
     path: "/article/:id",
     name: "ArticleDetails",
     component: ArticleDetails,
+    // 将路由params参数通过props传给组件
     props: true,
   },
   {
@@ -107,7 +108,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.needAuthentication) {
-    let isAdmin = getUserInfo() ? getUserInfo().isAdmin : false;
+    let isAdmin = getUserInfo ? getUserInfo().isAdmin : false;
     if (isAdmin) {
       next();
     } else {

@@ -1,20 +1,19 @@
 <template>
-  <div id="category-list">
+  <div class="category-list">
     <!-- 页头 -->
     <blog-header />
 
-    <!-- 二次元封面 -->
+    <!-- 封面 -->
     <blog-page-cover>
       <template #default="slotProps">
         <h1 :style="slotProps.hOneStyle">分类</h1>
       </template>
     </blog-page-cover>
 
+    <!-- 内容区 -->
     <div class="container">
-      <!-- 侧边栏 -->
       <blog-side-bar />
 
-      <!-- 标签云卡片 -->
       <blog-word-card :words="categoryCounts" baseUrl="/category" />
     </div>
 
@@ -27,17 +26,17 @@
 </template>
 
 <script>
-import { mapState } from "../../store/map";
-
 export default {
   name: "CategoryList",
-  setup() {
-    window.scrollTo({ top: 0 });
-    let { categoryCounts } = mapState("categoryAbout");
-
-    return { categoryCounts };
-  },
 };
+</script>
+
+<script setup>
+import { mapState } from "../../store/map";
+
+window.scrollTo({ top: 0 });
+
+const { categoryCounts } = mapState("categoryAbout");
 </script>
 
 <style lang="less" scoped>

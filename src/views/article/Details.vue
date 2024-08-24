@@ -3,8 +3,9 @@
     <!-- 页头 -->
     <blog-header />
 
-    <!-- 二次元封面 -->
+    <!-- 封面 -->
     <blog-page-cover>
+      <!-- 文章信息 -->
       <div class="article-info">
         <h1 class="article-title">
           {{ articleDetails.title }}
@@ -34,7 +35,7 @@
         </div>
       </div>
     </blog-page-cover>
-
+    <!-- 内容区 -->
     <div class="container">
       <!-- 侧边栏 -->
       <blog-side-bar>
@@ -45,8 +46,9 @@
         </div>
       </blog-side-bar>
 
-      <!-- 文章内容 -->
+      <!-- 文章主体 -->
       <div class="post-body">
+        <!-- 文章内容 -->
         <div class="article-content" v-html="articleDetails.content"></div>
 
         <!-- 版权声明 -->
@@ -222,211 +224,212 @@
 </template>
 
 <script>
+export default {
+  name: "ArticleDetails",
+};
+</script>
+
+<script setup>
+import { defineProps, ref, reactive, nextTick } from "vue";
+import { mapState } from "../../store/map";
 import {
   getArticleDetails,
   getPreviousNextArticle,
   updateViewCount,
 } from "../../api/article";
-import { reactive, nextTick, ref } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
-import markdownIt from "../../utils/markdown-it";
-import { mapState } from "../../store/map";
-import { useDefaultThumbnail, defaultThumbnail } from "../../utils/thumbnail";
+import markdownIt from "markdown-it";
+import { initMathJax, renderByMathjax } from "../../utils/mathjax";
 import buildCodeBlock from "../../utils/code-block";
-import { renderByMathjax, initMathJax } from "../../utils/mathjax";
-import router from "../../router";
+import { defaultThumbnail, useDefaultThumbnail } from "../../utils/thumbnail";
 import {
-  getCommentList,
   addComment,
   deleteComment,
+  getCommentList,
   updateComment,
 } from "../../api/comment";
+import router from "../../router";
 import { uploadImage } from "../../api/image";
-export default {
-  name: "ArticleDetails",
-  setup(props) {
-    window.scrollTo({ top: 0 });
+import { ElMessageBox, ElMessage } from "element-plus/lib/components/index.js";
 
-    let { adminInfo, isAdmin } = mapState("adminAbout");
-    let articleLoaded = ref(false);
-    let articleUrl = ref(window.location.href);
-    let previousArticle = reactive({});
-    let nextArticle = reactive({});
-    let lightBoxRef = ref();
-    // 获取文章内容
-    let articleDetails = reactive({ createTime: "" });
-    getArticleDetails(props.id).then((data) => {
-      Object.assign(articleDetails, data);
-      articleDetails.content = markdownIt.render(data.content);
+const props = defineProps(["id"]);
+const { adminInfo, isAdmin } = mapState("adminAbout");
 
-      nextTick(() => {
-        initMathJax({}, () => {
-          renderByMathjax(".article-content");
-          renderByMathjax(".comment-item-content");
-        });
-        buildCodeBlock(".article-content");
-        articleLoaded.value = true;
-      }).then(() => {
-        lightBoxRef.value.addImageClickedListener();
-      });
+const articleUrl = ref(window.location.href);
+
+const lightBoxRef = ref();
+window.scrollTo({ top: 0 });
+
+updateViewCount(props.id);
+
+/**
+ * 1.获取文章详情信息
+ * 2.处理数据
+ * 3.nextTick确保DOM更新后操作
+ * 4.初始化MathJax渲染文章和评论中的数学格式
+ * 5.构建代码块
+ * 6.标记文章加载完成
+ * 7.为图片查看器添加点击事件
+ */
+const articleDetails = reactive({ createTime: "" });
+const articleLoaded = ref(false);
+getArticleDetails(props.id).then((data) => {
+  Object.assign(articleDetails, data);
+  articleDetails.content = markdownIt.render(data.content);
+
+  nextTick(() => {
+    initMathJax({}, () => {
+      renderByMathjax(".article-content");
+      renderByMathjax(".comment-item-content");
     });
+    buildCodeBlock(".article-content");
+    articleLoaded.value = true;
+  }).then(() => {
+    lightBoxRef.value.addImageClickedListener();
+  });
+});
+/**
+ * 获取上一篇下一篇文章信息
+ */
+// 上一篇文章信息
+const previousArticle = reactive({});
+// 下一篇文章信息
+const nextArticle = reactive({});
+getPreviousNextArticle(props.id).then((data) => {
+  if (data.previous) {
+    Object.assign(previousArticle, data.previous);
+    if (!previousArticle.thumbnail) {
+      previousArticle.thumbnail = defaultThumbnail;
+    }
+  }
+  if (data.next) {
+    Object.assign(nextArticle, data.next);
+    if (!nextArticle.thumbnail) {
+      nextArticle.thumbnail = defaultThumbnail;
+    }
+  }
+});
 
-    updateViewCount(props.id);
+/**
+ * 获取评论的逻辑
+ * 1.获取文章评论列表
+ * 2.成功后更新当前评论页数
+ * 3.更新评论数量
+ * 4.将评论push到评论列表
+ * 5.在nextTick中渲染评论中的数学格式和代码块
+ */
 
-    // 获取上一篇和下一篇文章
-    getPreviousNextArticle(props.id).then((data) => {
-      if (data.previous) {
-        Object.assign(previousArticle, data.previous);
-        if (!previousArticle.thumbnail) {
-          previousArticle.thumbnail = defaultThumbnail;
-        }
-      }
-      if (data.next) {
-        Object.assign(nextArticle, data.next);
-        if (!nextArticle.thumbnail) {
-          nextArticle.thumbnail = defaultThumbnail;
-        }
-      }
+const comments = reactive([]);
+const commentCount = ref(0);
+const commentPageSize = 5;
+const currentCommentPageNum = ref(1);
+onCurrentCommentPageChanged(1);
+function onCurrentCommentPageChanged(pageNum) {
+  getCommentList(props.id, pageNum, commentPageSize).then((data) => {
+    currentCommentPageNum.value = pageNum;
+    commentCount.value = parseInt(data.total);
+    comments.splice(0, comments.length, ...data.rows);
+
+    nextTick(() => {
+      renderByMathjax(".comment-item-content");
+      buildCodeBlock(".comment-item-content");
     });
+  });
+}
 
-    // 获取评论列表
-    let comments = reactive([]);
-    let commentCount = ref(0);
-    let commentPageSize = 5;
-    let currentCommentPageNum = ref(1);
-    onCurrentCommentPageChanged(1);
+function editArticle() {
+  router.push(`/article/${props.id}/edit`);
+}
 
-    function onCurrentCommentPageChanged(pageNum) {
-      getCommentList(props.id, pageNum, commentPageSize).then((data) => {
-        currentCommentPageNum.value = pageNum;
-        commentCount.value = parseInt(data.total);
-        comments.splice(0, comments.length, ...data.rows);
-
-        nextTick(() => {
-          renderByMathjax(".comment-item-content");
-          buildCodeBlock(".comment-item-content");
-        });
-      });
-    }
-
-    function editArticle() {
-      router.push(`/article/${props.id}/edit`);
-    }
-
-    // 添加评论
-    let mavonToolbarOption = {
-      bold: true, // 粗体
-      italic: true, // 斜体
-      header: true, // 标题
-      underline: true, // 下划线
-      strikethrough: true, // 中划线
-      mark: true, // 标记
-      superscript: true, // 上角标
-      subscript: true, // 下角标
-      quote: true, // 引用
-      ol: true, // 有序列表
-      ul: true, // 无序列表
-      link: true, // 链接
-      imagelink: true, // 图片链接
-      code: true, // code
-      table: true, // 表格
-      fullscreen: true, // 全屏编辑
-      help: true, // 帮助
-      navigation: true, // 导航目录
-      alignleft: true, // 左对齐
-      aligncenter: true, // 居中
-      alignright: true, // 右对齐
-      subfield: true, // 单双栏模式
-      preview: true, // 预览
-    };
-    let commentContent = ref("");
-    let isInEditMode = ref(false);
-    let editedComment = {};
-    let mavonRef = ref();
-
-    function onImageAdded(pos, file) {
-      uploadImage(file).then((url) => {
-        mavonRef.value.$img2Url(pos, url);
-      });
-    }
-
-    function submitComment() {
-      if (commentContent.value.trim().length == 0) {
-        ElMessage.warning("评论内容不能为空哦~");
-        return;
-      }
-      let promise;
-
-      if (!isInEditMode.value) {
-        promise = addComment(props.id, commentContent.value);
-      } else {
-        promise = updateComment(editedComment.id, commentContent.value);
-      }
-
-      promise.then(() => {
-        ElMessage.success("吐槽成功啦");
-        commentContent.value = "";
-        onCurrentCommentPageChanged(currentCommentPageNum.value);
-      });
-
-      isInEditMode.value = false;
-    }
-
-    function onReplyComment(comment) {
-      commentContent.value = `@${comment.userName}\n>${comment.content.replace(
-        /\n/g,
-        "\n>"
-      )}\n\n`;
-    }
-
-    function onDeleteComment(comment) {
-      ElMessageBox.confirm("前辈确定删除这条评论吗？", "一条友善的提示", {
-        confirmButtonText: "你在教我做事？",
-        cancelButtonText: "我再想想",
-        type: "warning",
-      }).then(() => {
-        deleteComment(comment.id).then(() => {
-          ElMessage.success("删除评论成功~");
-          onCurrentCommentPageChanged(0);
-        });
-      });
-    }
-
-    function onUpdateComment(comment) {
-      commentContent.value = comment.content;
-      isInEditMode.value = true;
-      editedComment = comment;
-    }
-
-    return {
-      isAdmin,
-      articleDetails,
-      articleLoaded,
-      adminInfo,
-      articleUrl,
-      comments,
-      commentCount,
-      commentPageSize,
-      currentCommentPageNum,
-      useDefaultThumbnail,
-      onCurrentCommentPageChanged,
-      previousArticle,
-      nextArticle,
-      lightBoxRef,
-      mavonToolbarOption,
-      commentContent,
-      mavonRef,
-      isInEditMode,
-      editArticle,
-      onImageAdded,
-      submitComment,
-      onDeleteComment,
-      onReplyComment,
-      onUpdateComment,
-    };
-  },
-  props: ["id"],
+/**
+ * 添加评论的逻辑
+ */
+//编辑器的配置项
+const mavonToolbarOption = {
+  bold: true, // 粗体
+  italic: true, // 斜体
+  header: true, // 标题
+  underline: true, // 下划线
+  strikethrough: true, // 中划线
+  mark: true, // 标记
+  superscript: true, // 上角标
+  subscript: true, // 下角标
+  quote: true, // 引用
+  ol: true, // 有序列表
+  ul: true, // 无序列表
+  link: true, // 链接
+  imagelink: true, // 图片链接
+  code: true, // code
+  table: true, // 表格
+  fullscreen: true, // 全屏编辑
+  help: true, // 帮助
+  navigation: true, // 导航目录
+  alignleft: true, // 左对齐
+  aligncenter: true, // 居中
+  alignright: true, // 右对齐
+  subfield: true, // 单双栏模式
+  preview: true, // 预览
 };
+const commentContent = ref("");
+const isInEditMode = ref(false);
+let editedComment = {};
+const mavonRef = ref();
+
+function onImageAdded(pos, file) {
+  uploadImage(file).then((url) => {
+    mavonRef.value.$img2Url(pos, url);
+  });
+}
+
+function submitComment() {
+  if (commentContent.value.trim().length == 0) {
+    ElMessage.warning("评论内容不能为空哦~");
+    return;
+  }
+  let promise;
+  let message = "";
+
+  if (!isInEditMode.value) {
+    message = "吐槽成功啦~";
+    promise = addComment(props.id, commentContent.value);
+  } else {
+    message = "修改成功啦~";
+    promise = updateComment(editedComment.id, commentContent.value);
+  }
+
+  promise.then(() => {
+    ElMessage.success(message);
+    commentContent.value = "";
+    onCurrentCommentPageChanged(currentCommentPageNum.value);
+  });
+
+  isInEditMode.value = false;
+}
+// 回复评论时生成评论格式
+function onReplyComment(comment) {
+  commentContent.value = `@${comment.userName}\n>${comment.content.replace(
+    /\n/g,
+    "\n>"
+  )}\n\n`;
+}
+
+function onDeleteComment(comment) {
+  ElMessageBox.confirm("前辈确定删除这条评论吗？", "一条友善的提示", {
+    confirmButtonText: "你在教我做事？",
+    cancelButtonText: "我再想想",
+    type: "warning",
+  }).then(() => {
+    deleteComment(comment.id).then(() => {
+      ElMessage.success("删除评论成功啦~");
+      onCurrentCommentPageChanged(0);
+    });
+  });
+}
+
+function onUpdateComment(comment) {
+  commentContent.value = comment.content;
+  isInEditMode.value = true;
+  editedComment = comment;
+}
 </script>
 
 <style lang="less" scoped>
