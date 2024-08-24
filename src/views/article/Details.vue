@@ -237,7 +237,7 @@ import {
   getPreviousNextArticle,
   updateViewCount,
 } from "../../api/article";
-import markdownIt from "markdown-it";
+import markdownIt from "../../utils/markdown-it";
 import { initMathJax, renderByMathjax } from "../../utils/mathjax";
 import buildCodeBlock from "../../utils/code-block";
 import { defaultThumbnail, useDefaultThumbnail } from "../../utils/thumbnail";

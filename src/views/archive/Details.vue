@@ -32,7 +32,7 @@
           layout="prev,pager,next"
           :total="articleCount"
           :page-size="pageSize"
-          id="pageination"
+          id="pagination"
           @current-change="onCurrentPageChanged"
           v-if="articleCount > 0"
         />

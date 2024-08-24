@@ -15,7 +15,7 @@
 
       <div class="archive-body">
         <div class="archive-card">
-          <el-timeline>
+          <el-timeline class="timeline">
             <el-timeline-item
               center
               :timestamp="`历史文章 - ${articleCount}`"

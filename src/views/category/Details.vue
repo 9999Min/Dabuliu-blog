@@ -16,7 +16,7 @@
 
       <!-- 分类的文章 -->
       <div class="post-article-list">
-        <blog-post-article-car
+        <blog-post-article-card
           v-for="(article, index) in postArticles"
           :key="article.id"
           :article="article"
