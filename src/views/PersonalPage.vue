@@ -3,20 +3,21 @@
     <!-- 页头 -->
     <blog-header />
 
-    <!-- 二次元封面 -->
+    <!-- 封面 -->
     <blog-page-cover>
       <template #default="slotProps">
         <h1 :style="slotProps.hOneStyle">个人中心</h1>
       </template>
     </blog-page-cover>
 
-    <!-- 个人信息 -->
+    <!-- 个人信息卡片 -->
     <div class="user-info-card">
       <!-- 用户封面 -->
       <div class="user-cover">
         <img src="../assets/image/user-cover.jpg" alt="封面" />
       </div>
 
+      <!-- 信息表单 -->
       <el-form
         ref="ruleFormRef"
         :model="ruleForm"
@@ -24,9 +25,8 @@
         label-width="0px"
         class="user-ruleForm"
       >
-        <!-- 用户头像 -->
         <div class="user-avatar">
-          <img :src="avatar" alt="头像" id="avatar" />
+          <img :src="avatar" alt="用户头像" id="avatar" />
           <div
             class="user-avatar-editor"
             v-show="isInEditMode && !isProgressVisible"
@@ -37,6 +37,7 @@
             </div>
             <span>编辑头像</span>
           </div>
+          <!-- 文件选择框 -->
           <input
             type="file"
             id="avatar-input"
@@ -80,7 +81,7 @@
           <div class="user-info-item">
             <span class="user-info-label">性别</span>
             <span class="user-info-value" v-show="!isInEditMode">{{
-              sex == "0" ? "男" : "女"
+              userInfo.sex == "0" ? "男" : "女"
             }}</span>
             <el-form-item prop="sex">
               <el-radio-group v-model="ruleForm.sex" v-show="isInEditMode">
@@ -93,7 +94,7 @@
           <div class="user-info-item">
             <span class="user-info-label">个性签名</span>
             <span class="user-info-value" v-show="!isInEditMode">{{
-              signature
+              userInfo.signature
             }}</span>
             <el-form-item prop="signature">
               <el-input
@@ -109,7 +110,7 @@
           <div class="user-info-item">
             <span class="user-info-label">电子邮箱</span>
             <span class="user-info-value" v-show="!isInEditMode">{{
-              email
+              userInfo.email
             }}</span>
             <el-form-item prop="email">
               <el-input
@@ -126,7 +127,7 @@
           <div class="user-info-item">
             <span class="user-info-label">手机号码</span>
             <span class="user-info-value" v-show="!isInEditMode">{{
-              phonenumber || "未知"
+              userInfo.phonenumber || "未知"
             }}</span>
             <el-form-item prop="phonenumber">
               <el-input
@@ -141,7 +142,9 @@
         </div>
       </el-form>
 
+      <!-- 底部按钮 -->
       <div class="card-footer">
+        <!-- 编辑按钮 -->
         <el-button
           type="primary"
           color="#1892ff"
@@ -159,18 +162,27 @@
         <el-button @click="cancelEditInfo" v-show="isInEditMode"
           >取消</el-button
         >
-        <el-button type="danger" @click="handleLogout" v-show="!isInEditMode"
-          >退出登录</el-button
-        >
+        <el-button
+          type="danger"
+          @click="handleLogout"
+          v-show="!isInEditMode"
+        ></el-button>
       </div>
     </div>
+
     <!-- 页脚 -->
     <blog-footer />
   </div>
 </template>
 
 <script>
-import { reactive, ref, toRefs } from "@vue/reactivity";
+export default {
+  name: "PersonalPage",
+};
+</script>
+
+<script setup>
+import { reactive, ref } from "@vue/reactivity";
 import { getUserInfo, setUserInfo } from "../utils/storage";
 import { logout, updateUserInfo } from "../api/user";
 import router from "../router";
@@ -178,133 +190,118 @@ import { uploadImage } from "../api/image";
 import { ElMessage } from "element-plus/lib/components";
 import store from "../store";
 
-export default {
-  name: "Settings",
-  setup() {
-    let userInfo = reactive(getUserInfo());
-    let isInEditMode = ref(false);
-    let ruleFormRef = ref();
-    let progress = ref(0);
-    let isProgressVisible = ref(false);
+const userInfo = reactive(getUserInfo());
+const isInEditMode = ref(false);
+const ruleFormRef = ref();
+const progress = ref(0);
+const isProgressVisible = ref(false);
 
-    let ruleForm = reactive({
-      nickName: userInfo.nickName,
-      sex: userInfo.sex == "0" ? "男" : "女",
-      email: userInfo.email,
-      signature: userInfo.signature,
-      phonenumber: userInfo.phonenumber,
-      avatar: userInfo.avatar,
-    });
+const ruleForm = reactive({
+  nickName: userInfo.nickName,
+  sex: userInfo.sex == "0" ? "男" : "女",
+  email: userInfo.email,
+  signature: userInfo.signature,
+  phonenumber: userInfo.phonenumber,
+  avatar: userInfo.avatar,
+});
 
-    let rules = reactive({
-      nickName: [
-        {
-          required: true,
-          message: "昵称不能为空",
-          trigger: "blur",
-        },
-      ],
-      email: [
-        {
-          type: "email",
-          required: true,
-          message: "邮箱格式错误",
-          trigger: "blur",
-        },
-      ],
-      phonenumber: [
-        {
-          required: false,
-          message: "手机号码格式错误",
-          trigger: "blur",
-          pattern: /(^((\+86)|(86))?(1[3-9])\d{9}$)|(^(0\d{2,3})-?(\d{7,8})$)/,
-        },
-      ],
-    });
+const rules = reactive({
+  nickName: [
+    {
+      required: true,
+      message: "昵称不能为空",
+      trigger: "blur",
+    },
+  ],
+  email: [
+    {
+      type: "email",
+      required: true,
+      message: "邮箱格式错误",
+      trigger: "blur",
+    },
+  ],
+  phonenumber: [
+    {
+      required: false,
+      message: "手机号码格式错误",
+      trigger: "blur",
+      pattern: /(^((\+86)|(86))?(1[3-9])\d{9}$)|(^(0\d{2,3})-?(\d{7,8})$)/,
+    },
+  ],
+});
+/**
+ * 用户退出登录
+ */
+function handleLogout() {
+  logout.then(() => {
+    router.replace("/login");
+  });
+}
+/**
+ * 打开文件选择框
+ */
+function openFileDialog() {
+  document.getElementById("avatar-input").click();
+}
+/**
+ * 上传头像，并设置头像地址
+ */
+function uploadAvatar() {
+  const fileInput = document.getElementById("avatar-input");
+  if (fileInput.files.length == 0) {
+    return;
+  }
 
-    function handleLogout() {
-      logout().then(() => {
-        router.replace("/login");
-      });
-    }
+  isProgressVisible.value = true;
 
-    function openFileDialog() {
-      document.getElementById("avatar-input").click();
-    }
+  const file = fileInput.files[0];
 
-    function uploadAvatar() {
-      let fileInput = document.getElementById("avatar-input");
-      if (fileInput.files.length == 0) {
-        return;
-      }
+  document.getElementById("avatar").src = URL.createObjectURL(file);
 
-      isProgressVisible.value = true;
-
-      let file = fileInput.files[0];
-      document.getElementById("avatar").src = URL.createObjectURL(file);
-
-      uploadImage(file, progress).then(
-        (url) => {
-          ruleForm.avatar = url;
-          isProgressVisible.value = false;
-        },
-        () => {
-          ElMessage.error("哎呀，头像上传出错啦~");
-          isProgressVisible.value = false;
-          document.getElementById("avatar").src = ruleForm.avatar;
-        }
-      );
-    }
-
-    function saveEditInfo(form) {
-      if (!form) return;
-
-      form.validate((valid) => {
-        if (!valid) {
-          ElMessage.error("前辈填写的个人信息有点小问题哦~");
-          return;
-        }
-
-        Object.assign(userInfo, ruleForm);
-        userInfo.sex = ruleForm.sex == "男" ? "0" : "1";
-
-        updateUserInfo(userInfo).then(() => {
-          setUserInfo(userInfo);
-          isInEditMode.value = false;
-          ElMessage.success("更新前辈个人信息成功啦");
-
-          if (store.state.adminAbout.isAdmin) {
-            store.commit("adminAbout/updateAdminInfo", userInfo);
-          }
-        });
-      });
-    }
-
-    function cancelEditInfo() {
-      Object.assign(ruleForm, userInfo);
-      ruleForm.sex = userInfo.sex == "0" ? "男" : "女";
+  uploadImage(file, progress).then(
+    (url) => {
+      ruleForm.avatar = url;
+      isProgressVisible.value = false;
+    },
+    () => {
+      ElMessage.error("哎呀呀，头像上传出错啦~");
+      isProgressVisible.value = false;
       document.getElementById("avatar").src = ruleForm.avatar;
-      ruleFormRef.value.clearValidate();
-      isInEditMode.value = false;
     }
+  );
+}
+// 保存修改的个人信息
+function saveEditInfo(form) {
+  if (!form) return;
+  form.validate((valid) => {
+    if (!valid) {
+      ElMessage.error("个人信息有误哦~请重新填写");
+      return;
+    }
+    Object.assign(userInfo, ruleForm);
 
-    return {
-      userInfo,
-      ...toRefs(userInfo),
-      handleLogout,
-      saveEditInfo,
-      cancelEditInfo,
-      openFileDialog,
-      uploadAvatar,
-      isProgressVisible,
-      isInEditMode,
-      ruleFormRef,
-      progress,
-      ruleForm,
-      rules,
-    };
-  },
-};
+    userInfo.sex = ruleForm.sex == "男" ? "0" : "1";
+
+    updateUserInfo(userInfo).then(() => {
+      setUserInfo(userInfo);
+      isInEditMode.value = false;
+      ElMessage.success("个人信息更新成功啦~");
+      // 如果是管理员更新仓库信息
+      if (store.state.adminAbout.isAdmin) {
+        store.commit("adminAbout/updateAdminInfo", userInfo);
+      }
+    });
+  });
+}
+// 取消编辑事件
+function cancelEditInfo() {
+  Object.assign(ruleForm, userInfo);
+  ruleForm.sex = userInfo.sex == "0" ? "男" : "女";
+  document.getElementById("avatar").src = ruleForm.avatar;
+  ruleForm.value.clearValidate();
+  isInEditMode.value = false;
+}
 </script>
 
 <style lang="less" scoped>
