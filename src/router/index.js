@@ -1,10 +1,9 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/HomePage";
 import Login from "../views/Login.vue";
-import Register from "../views/Register.vue";
+import Register from "../views/RegisterPage.vue";
 import ArticleDetails from "../views/article/Details";
 import ArticleEdit from "../views/article/Edit";
-import Settings from "../views/Settings";
 import ArchiveList from "../views/archive/List";
 import ArchiveDetails from "../views/archive/Details";
 import CategoryList from "../views/category/List";
@@ -13,6 +12,7 @@ import TagList from "../views/tag/List";
 import TagDetails from "../views/tag/Details";
 import PageNotFound from "../views/PageNotFound";
 import { getUserInfo } from "../utils/storage";
+import PersonalPage from "../views/PersonalPage.vue";
 
 const routes = [
   {
@@ -90,7 +90,7 @@ const routes = [
   {
     path: "/user/settings",
     name: "UserSettings",
-    component: Settings,
+    component: PersonalPage,
     meta: {
       needLogin: true,
     },

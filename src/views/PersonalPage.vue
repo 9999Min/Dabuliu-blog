@@ -162,11 +162,9 @@
         <el-button @click="cancelEditInfo" v-show="isInEditMode"
           >取消</el-button
         >
-        <el-button
-          type="danger"
-          @click="handleLogout"
-          v-show="!isInEditMode"
-        ></el-button>
+        <el-button type="danger" @click="handleLogout" v-show="!isInEditMode"
+          >退出登录</el-button
+        >
       </div>
     </div>
 
@@ -234,7 +232,7 @@ const rules = reactive({
  * 用户退出登录
  */
 function handleLogout() {
-  logout.then(() => {
+  logout().then(() => {
     router.replace("/login");
   });
 }
