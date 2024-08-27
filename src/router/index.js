@@ -10,7 +10,7 @@ import CategoryList from "../views/category/List";
 import CategoryDetails from "../views/category/Details";
 import TagList from "../views/tag/List";
 import TagDetails from "../views/tag/Details";
-import PageNotFound from "../views/PageNotFound";
+import PageNotFound from "../views/404.vue";
 import { getUserInfo } from "../utils/storage";
 import PersonalPage from "../views/PersonalPage.vue";
 
